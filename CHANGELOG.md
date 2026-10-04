@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Overlay background opacity** in encodes now matches the viewer burn-in preview. The plate is composited with Core Graphics (gamma-encoded source-over) instead of Core Image’s linear `composited(over:)`, which made the same alpha look washed out.
+- **RenderController concurrency warnings** — notification auth uses async `UserNotifications` APIs on the main actor; render task capture list no longer mixes weak/strong `self`.
 
 ## [1.0.3] - 2026-10-04
 

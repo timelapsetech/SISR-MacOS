@@ -2,7 +2,7 @@ import AppKit
 import Foundation
 import Observation
 import SISRKit
-import UserNotifications
+@preconcurrency import UserNotifications
 
 @Observable
 @MainActor
@@ -44,11 +44,11 @@ final class RenderController {
         frameCache?.pauseForRender()
         let snapshot = SequenceProjectSnapshot(from: project)
 
-        renderTask = Task { [renderer] in
+        renderTask = Task { [renderer, self] in
             do {
-                let url = try await renderer.render(project: snapshot) { [weak self] prog in
+                let url = try await renderer.render(project: snapshot) { prog in
                     Task { @MainActor in
-                        self?.enqueueProgress(prog)
+                        self.enqueueProgress(prog)
                     }
                 }
                 await MainActor.run {
@@ -188,18 +188,18 @@ final class RenderController {
     private func notifyCompletion(url: URL) {
         guard notifyOnRenderComplete else { return }
 
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { [weak self] settings in
+        Task { @MainActor in
+            let center = UNUserNotificationCenter.current()
+            let settings = await center.notificationSettings()
             switch settings.authorizationStatus {
             case .authorized, .provisional:
-                self?.postRenderNotification(url: url)
+                self.postRenderNotification(url: url)
             case .notDetermined:
-                guard self?.didRequestNotificationAuth != true else { return }
-                self?.didRequestNotificationAuth = true
-                center.requestAuthorization(options: [.alert, .sound]) { granted, _ in
-                    if granted {
-                        self?.postRenderNotification(url: url)
-                    }
+                guard !self.didRequestNotificationAuth else { return }
+                self.didRequestNotificationAuth = true
+                let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
+                if granted {
+                    self.postRenderNotification(url: url)
                 }
             default:
                 break
