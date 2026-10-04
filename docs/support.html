@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Support — SISR</title>
+    <meta
+      name="description"
+      content="Get help with SISR for Mac: user guide links, common issues, and how to contact the maintainers."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/icon-128.png" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="SISR home">
+          <img
+            class="brand__logo"
+            src="assets/icon-128.png"
+            width="36"
+            height="36"
+            alt=""
+            decoding="async"
+          />
+          <span>SISR</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="guide.html">Guide</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="support.html" aria-current="page">Support</a>
+          <a class="nav__download" href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >Download</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Support</h1>
+        <p class="lead">
+          Help for SISR on Mac — guides, common fixes, and how to reach the maintainers.
+          This page also serves as the App Store support URL.
+        </p>
+      </section>
+
+      <section>
+        <h2>Documentation</h2>
+        <ul>
+          <li><a href="guide.html">User guide</a> — open, crop, color, encode, render</li>
+          <li><a href="crops.html">Crops &amp; framing</a> — how presets cut a 3:2 still</li>
+          <li><a href="privacy.html">Privacy policy</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Common issues</h2>
+        <h3>The app will not open</h3>
+        <p>
+          After downloading from the internet, macOS may block the first launch. Open
+          <strong>System Settings → Privacy &amp; Security</strong> and allow SISR, or
+          right-click the app and choose <strong>Open</strong>.
+        </p>
+        <h3>“Could not read directory” / empty after Open</h3>
+        <p>
+          Grant folder access when the Open panel appears. Re-open the sequence folder if a
+          bookmark expired. The native app expects a folder that itself contains the
+          numbered frames (not only a parent of many sequences).
+        </p>
+        <h3>Render fails or runs out of memory</h3>
+        <p>
+          Try a lower output size, keep auto bitrate, shorten the in/out range, or close
+          other memory-heavy apps. Very long 4K sequences need more RAM during encode.
+        </p>
+        <h3>Date overlay is blank</h3>
+        <p>
+          Overlays use embedded capture dates when present. Files stripped of EXIF will not
+          show a camera date.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Prefer public bug reports so others can benefit:
+        </p>
+        <ul>
+          <li>
+            <a href="https://github.com/timelapsetech/SISR-MacOS/issues"
+              >GitHub Issues — timelapsetech/SISR-MacOS</a
+            >
+          </li>
+        </ul>
+        <p>
+          Include your macOS version, SISR version (from the About window or release tag),
+          and what you expected versus what happened. Do not attach private photo libraries
+          unless you intend to share them.
+        </p>
+      </section>
+
+      <section>
+        <h2>Downloads</h2>
+        <p>
+          Builds are on
+          <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>:
+          <code>app-v*</code> tags → <code>SISR-native-*-macos-universal.zip</code>.
+        </p>
+        <p>
+          Details:
+          <a href="index.html#downloads">Download</a>
+        </p>
+        <p>
+          <a class="btn btn--download" href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >GitHub Releases</a
+          >
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="index.html">Home</a>
+        ·
+        <a href="privacy.html">Privacy</a>
+        ·
+        <a href="https://github.com/timelapsetech/SISR-MacOS">Source</a>
+      </p>
+    </footer>
+  </body>
+</html>

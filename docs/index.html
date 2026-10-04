@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SISR — Simple Image Sequence Renderer for Mac</title>
+    <meta
+      name="description"
+      content="Native Mac app to turn numbered photo sequences into MP4, MOV, or GIF. Preview, crop, color, and encode with AVFoundation — free and open source."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/icon-128.png" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="SISR home">
+          <img
+            class="brand__logo"
+            src="assets/icon-128.png"
+            width="36"
+            height="36"
+            alt=""
+            decoding="async"
+          />
+          <span>SISR</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="guide.html">Guide</a>
+          <a href="crops.html">Crops</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="support.html">Support</a>
+          <a href="https://github.com/timelapsetech/SISR-MacOS">GitHub</a>
+          <a class="nav__download" href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >Download</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="hero__logo-wrap">
+          <img
+            class="hero__logo"
+            src="assets/icon-128.png"
+            width="96"
+            height="96"
+            alt=""
+            decoding="async"
+          />
+        </p>
+        <p class="eyebrow">Native macOS app</p>
+        <h1>Turn a folder of photos into a video</h1>
+        <p class="lead">
+          <strong>SISR</strong> (Simple Image Sequence Renderer) is a free, open-source Mac
+          app for photographers and creators. Open a numbered stills folder, preview the
+          sequence, crop and grade, then export <strong>MP4</strong>, <strong>MOV</strong>,
+          or <strong>GIF</strong> — with optional date overlays and sizes ready for
+          Instagram, HD, or 4K.
+        </p>
+        <div class="btn-row">
+          <a
+            class="btn btn--download"
+            href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >Download for Mac</a
+          >
+          <a class="btn btn--primary" href="guide.html">User guide</a>
+          <a class="btn btn--ghost" href="crops.html">Crops &amp; framing</a>
+        </div>
+        <p class="download-hint">
+          Grab <strong>SISR-native-*-macos-universal.zip</strong> from
+          <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>
+          (or the Mac App Store when listed). Unzip and move <strong>SISR.app</strong> to
+          Applications.
+        </p>
+      </section>
+
+      <section class="shot-showcase" aria-labelledby="ui-heading">
+        <h2 id="ui-heading">Built for the Mac</h2>
+        <p class="samples-showcase__lead">
+          Three panes: sequence &amp; encode on the left, live viewer and filmstrip in the
+          center, crop and color on the right — powered by SwiftUI and AVFoundation.
+        </p>
+        <figure class="shot-hero">
+          <img
+            src="assets/screenshots/web-01-workspace.jpg"
+            alt="SISR main window with sequence settings, crop overlay, and color adjustments"
+            width="1600"
+            height="1000"
+            decoding="async"
+          />
+          <figcaption>
+            Preview, crop, color, and render from one native window.
+          </figcaption>
+        </figure>
+        <div class="shot-grid">
+          <figure class="shot-card">
+            <img
+              src="assets/screenshots/web-03-color.jpg"
+              alt="Color adjustments with sliders and numeric fields"
+              width="800"
+              height="500"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Color with sliders and precise numeric entry</figcaption>
+          </figure>
+          <figure class="shot-card">
+            <img
+              src="assets/screenshots/web-05-controls.jpg"
+              alt="Progressive disclosure keeps advanced controls collapsed"
+              width="800"
+              height="500"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Advanced controls stay tucked away until you need them</figcaption>
+          </figure>
+          <figure class="shot-card">
+            <img
+              src="assets/screenshots/web-04-empty.jpg"
+              alt="Empty state prompting to open a sequence"
+              width="800"
+              height="500"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Open a numbered sequence folder to begin</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>What you can do</h2>
+        <div class="card-grid">
+          <article class="card">
+            <h3>Live preview &amp; filmstrip</h3>
+            <p>
+              Scrub frames with a thumbnail filmstrip, set in/out points, and see crop and
+              color updates as you work.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Crop, straighten, rotate</h3>
+            <p>
+              Interactive crop handles, straighten with a slider or typed degrees, 90°
+              rotate, and quick sizes from 8K to 360p — including portrait for social.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Color &amp; detail</h3>
+            <p>
+              Exposure, contrast, highlights, shadows, saturation, plus optional sharpen,
+              noise reduction, and vignette — grouped so the inspector stays calm.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Encode with confidence</h3>
+            <p>
+              H.264 (and more) with auto bitrates sized for 1080p and 4K, or open
+              <strong>Bitrate &amp; quality</strong> to override. Deflicker analysis reports
+              progress before you render.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Dates on every frame</h3>
+            <p>
+              Burn in capture date from camera metadata when available — useful for builds,
+              gardens, and trips.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Framing you can predict</h3>
+            <p>
+              Presets for vertical social (9:16), HD, and 4K.
+              <a href="crops.html">Crop diagrams</a> show how Keep top / Center / Keep bottom
+              line up with the photo.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="samples" class="samples-showcase" aria-labelledby="samples-heading">
+        <h2 id="samples-heading">What the output can look like</h2>
+        <p class="samples-showcase__lead">
+          Real still frames from SISR — overlays and crop presets as they appear on screen.
+        </p>
+        <div class="sample-grid">
+          <figure class="sample-figure">
+            <img
+              src="assets/samples/output-clean.png"
+              alt="Landscape photograph as a video frame with no text overlay"
+              width="1100"
+              height="725"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>No overlay</strong>
+              Full-frame output when you are not burning in dates or frame numbers.
+            </figcaption>
+          </figure>
+          <figure class="sample-figure">
+            <img
+              src="assets/samples/overlay-date.png"
+              alt="Landscape photograph with a date stamp in the corner"
+              width="1100"
+              height="732"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>Date overlay</strong>
+              Capture date on each frame from camera metadata when available.
+            </figcaption>
+          </figure>
+          <figure class="sample-figure">
+            <img
+              src="assets/samples/overlay-frame.png"
+              alt="Landscape photograph with a frame number in the corner"
+              width="1100"
+              height="733"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>Frame overlay</strong>
+              Sequential frame numbers for reference or editing handoff.
+            </figcaption>
+          </figure>
+          <figure class="sample-figure">
+            <img
+              src="assets/samples/crop-uhd-frame.png"
+              alt="Wide landscape in 16:9 with a frame number overlay"
+              width="1100"
+              height="617"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <strong>UHD crop + frame</strong>
+              4K-style 16:9 framing — see <a href="crops.html">how cropping works</a>.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>Who it is for</h2>
+        <ul>
+          <li>Photographers turning still sequences into short videos</li>
+          <li>Creators who want dates or frame numbers burned into the picture</li>
+          <li>Anyone who prefers a focused Mac app over configuring NLE export by hand</li>
+        </ul>
+      </section>
+
+      <section id="downloads">
+        <h2>Download</h2>
+        <p class="samples-showcase__lead">
+          Free builds are on
+          <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>.
+        </p>
+        <div class="card-grid">
+          <article class="card card--accent">
+            <p class="card__eyebrow">macOS</p>
+            <h3>SISR for Mac</h3>
+            <p>
+              SwiftUI preview, interactive crop &amp; color, AVFoundation encode. Work one
+              sequence at a time with a live filmstrip.
+            </p>
+            <ul class="card__list">
+              <li>Asset: <code>SISR-native-*-macos-universal.zip</code></li>
+              <li>Tags: <code>app-v1.0.3</code> (and later)</li>
+              <li>Guide: <a href="guide.html">User guide</a></li>
+            </ul>
+            <p class="card__actions">
+              <a
+                class="btn btn--download"
+                href="https://github.com/timelapsetech/SISR-MacOS/releases"
+                >Get the latest zip</a
+              >
+            </p>
+          </article>
+        </div>
+        <p class="callout">
+          <strong>Tip:</strong> On the Releases page, open an <code>app-v*</code> release,
+          download the zip under Assets, unzip, and move <strong>SISR.app</strong> to
+          Applications.
+        </p>
+      </section>
+
+      <section>
+        <h2>Get started</h2>
+        <p>
+          Open a folder of numbered stills (<code>name_0001.jpg</code> …), set size and
+          encode options, then click <strong>Render</strong>.
+        </p>
+        <div class="download-inline">
+          <a
+            class="btn btn--download"
+            href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >GitHub Releases</a
+          >
+          <a class="btn btn--primary" href="guide.html">User guide</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Simple Image Sequence Renderer — open source under the MIT License.
+        <a href="https://github.com/timelapsetech/SISR-MacOS">Source</a>
+        ·
+        <a href="https://github.com/timelapsetech/SISR-MacOS/releases">Downloads</a>
+        ·
+        <a href="privacy.html">Privacy</a>
+        ·
+        <a href="support.html">Support</a>
+      </p>
+    </footer>
+  </body>
+</html>

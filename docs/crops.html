@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crops &amp; framing — SISR</title>
+    <meta
+      name="description"
+      content="See how a typical 3:2 camera photo is cropped for HD, 4K, or Instagram in SISR, and how Keep top, Center, and Keep bottom line up with the app."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/icon-128.png" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="SISR home">
+          <img
+            class="brand__logo"
+            src="assets/icon-128.png"
+            width="36"
+            height="36"
+            alt=""
+            decoding="async"
+          />
+          <span>SISR</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="guide.html">Guide</a>
+          <a href="crops.html" aria-current="page">Crops</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="support.html">Support</a>
+          <a class="nav__download" href="https://github.com/timelapsetech/SISR-MacOS/releases">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Crops &amp; framing</h1>
+        <p class="lead">
+          SISR never stretches your photo to fit a random shape. It chooses a
+          <strong>window</strong> with the right proportions, then scales that window to the
+          output size. The examples below use a common <strong>3:2</strong> camera image
+          (many DSLRs and mirrorless cameras) so you can match what you see on screen to the
+          <strong>Position</strong> menu for HD and 4K.
+        </p>
+      </section>
+
+      <section id="photography-32">
+        <h2>Starting point: a 3:2 photograph</h2>
+        <p>
+          A standard 3:2 picture is <strong>one and a half times as wide as it is tall</strong>
+          (for example <strong>6000 × 4000</strong> pixels). That shape is a bit
+          <strong>taller</strong> than a widescreen 16:9 frame. So when you pick
+          <strong>HD</strong> or <strong>UHD</strong>, SISR keeps the <strong>full width</strong>
+          of the photo and trims <strong>from the top, the bottom, or both</strong> until the
+          remainder is 16:9. The <strong>Position (HD / UHD)</strong> menu chooses which
+          vertical slice you keep.
+        </p>
+        <p>
+          In the diagrams, the gray box is the <strong>whole photo</strong> (scaled to 300×200
+          units to keep the math simple). The green outline is the <strong>16:9</strong> area
+          that becomes your 1080p or 4K video. Anything outside the green box is not used.
+        </p>
+
+        <div class="figure">
+          <p class="figure__title">
+            From 3:2 to 16:9 — the <strong>Position</strong> menu (and
+            <code>--hd-crop</code> / <code>--uhd-crop</code> on the command line)
+          </p>
+          <p class="figure__intro">
+            The band’s height is the image width multiplied by 9⁄16. On a
+            <strong>3000 × 2000</strong> file, that height is about <strong>1688 px</strong>,
+            leaving roughly <strong>312 px</strong> of extra picture above or below — which
+            is exactly what you slide with <strong>Keep top</strong>, <strong>Center</strong>,
+            or <strong>Keep bottom</strong>.
+          </p>
+          <div class="diagram-row">
+            <div class="diagram-box">
+              <svg
+                viewBox="0 0 300 200"
+                width="220"
+                height="147"
+                role="img"
+                aria-labelledby="hd-top-title"
+              >
+                <title id="hd-top-title">3:2 image with 16:9 band at top, Keep top</title>
+                <defs>
+                  <linearGradient id="ph32-a" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4b5563" />
+                    <stop offset="100%" stop-color="#374151" />
+                  </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="300" height="200" fill="url(#ph32-a)" stroke="#6b7280" stroke-width="1.5" />
+                <rect x="0" y="0" width="300" height="168.75" fill="none" stroke="#34d399" stroke-width="3" />
+                <text x="150" y="22" text-anchor="middle" fill="#ecfdf5" font-size="11" font-family="system-ui,sans-serif" font-weight="600">16:9 band</text>
+              </svg>
+              <div class="diagram-label">
+                <strong>Keep top</strong><br />
+                <span class="app-map">GUI: Position → <strong>Keep top</strong></span><br />
+                <span class="app-map">CLI: <code>--hd-crop keep_top</code> or <code>--uhd-crop keep_top</code></span>
+              </div>
+            </div>
+            <div class="diagram-box">
+              <svg
+                viewBox="0 0 300 200"
+                width="220"
+                height="147"
+                role="img"
+                aria-labelledby="hd-mid-title"
+              >
+                <title id="hd-mid-title">3:2 image with 16:9 band centered</title>
+                <defs>
+                  <linearGradient id="ph32-b" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4b5563" />
+                    <stop offset="100%" stop-color="#374151" />
+                  </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="300" height="200" fill="url(#ph32-b)" stroke="#6b7280" stroke-width="1.5" />
+                <rect x="0" y="15.625" width="300" height="168.75" fill="none" stroke="#34d399" stroke-width="3" />
+                <text x="150" y="104" text-anchor="middle" fill="#ecfdf5" font-size="11" font-family="system-ui,sans-serif" font-weight="600">16:9 band</text>
+              </svg>
+              <div class="diagram-label">
+                <strong>Center</strong> (middle)<br />
+                <span class="app-map">GUI: Position → <strong>Center</strong></span><br />
+                <span class="app-map">CLI: <code>--hd-crop center</code> or <code>--uhd-crop center</code></span>
+              </div>
+            </div>
+            <div class="diagram-box">
+              <svg
+                viewBox="0 0 300 200"
+                width="220"
+                height="147"
+                role="img"
+                aria-labelledby="hd-bot-title"
+              >
+                <title id="hd-bot-title">3:2 image with 16:9 band at bottom, Keep bottom</title>
+                <defs>
+                  <linearGradient id="ph32-c" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4b5563" />
+                    <stop offset="100%" stop-color="#374151" />
+                  </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="300" height="200" fill="url(#ph32-c)" stroke="#6b7280" stroke-width="1.5" />
+                <rect x="0" y="31.25" width="300" height="168.75" fill="none" stroke="#34d399" stroke-width="3" />
+                <text x="150" y="188" text-anchor="middle" fill="#ecfdf5" font-size="11" font-family="system-ui,sans-serif" font-weight="600">16:9 band</text>
+              </svg>
+              <div class="diagram-label">
+                <strong>Keep bottom</strong><br />
+                <span class="app-map">GUI: Position → <strong>Keep bottom</strong></span><br />
+                <span class="app-map">CLI: <code>--hd-crop keep_bottom</code> or <code>--uhd-crop keep_bottom</code></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="figure sample-realshot">
+          <p class="figure__title">From a real export (not just a diagram)</p>
+          <p class="figure__intro">
+            The sketches above are simplified. This still is from an actual render using the
+            <strong>UHD</strong> crop and <strong>Frame</strong> overlay — a 16:9 result at
+            4K resolution with a small frame counter on the image.
+          </p>
+          <figure class="sample-figure">
+            <img
+              src="assets/samples/crop-uhd-frame.png"
+              alt="Exported video frame showing wide 16:9 landscape with frame number overlay"
+              width="1100"
+              height="617"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              Same combination you can choose in the app: <strong>Crop → UHD</strong>,
+              <strong>Position</strong> as needed for your photo shape, and
+              <strong>Overlay → Frame</strong>.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="ig-32">
+        <h2>Same 3:2 image → Instagram (9:16)</h2>
+        <p>
+          A 3:2 landscape shot is <strong>wider</strong> than a tall phone-style 9:16 frame.
+          To fit, SISR keeps the <strong>full height</strong> of the photo and trims
+          <strong>equal amounts from the left and right</strong>, leaving a vertical strip in
+          the middle. That strip is then scaled to <strong>1080 × 1920</strong>. The
+          <strong>Position</strong> option is not shown for Instagram in the app — framing is
+          always this centered strip.
+        </p>
+
+        <div class="figure">
+          <p class="figure__title">3:2 → 9:16 — vertical strip (sides discarded)</p>
+          <svg
+            viewBox="0 0 300 200"
+            width="100%"
+            style="max-width: 420px"
+            role="img"
+            aria-labelledby="ig32-title"
+          >
+            <title id="ig32-title">3:2 frame with centered 9:16 strip</title>
+            <defs>
+              <linearGradient id="ph32-ig" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#1f2937" />
+                <stop offset="50%" stop-color="#374151" />
+                <stop offset="100%" stop-color="#1f2937" />
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="300" height="200" fill="url(#ph32-ig)" stroke="#6b7280" stroke-width="1.5" />
+            <rect x="0" y="0" width="93.75" height="200" fill="#0f1114" opacity="0.55" />
+            <rect x="206.25" y="0" width="93.75" height="200" fill="#0f1114" opacity="0.55" />
+            <rect x="93.75" y="0" width="112.5" height="200" fill="none" stroke="#60a5fa" stroke-width="3" />
+            <text x="150" y="105" text-anchor="middle" fill="#dbeafe" font-size="12" font-family="system-ui,sans-serif" font-weight="600">9:16</text>
+          </svg>
+          <p class="figure__caption">
+            Strip width = height × (9⁄16). For <strong>H</strong> = 4000 px:
+            4000 × 9⁄16 = <strong>2250 px</strong> wide; on a 6000 px-wide file, equal side
+            crops of 1875 px each. Preset: <strong>Crop → Instagram</strong>; CLI:
+            <code>--instagram-crop</code>.
+          </p>
+        </div>
+      </section>
+
+      <section id="other-aspects">
+        <h2>Other camera shapes</h2>
+        <p>
+          <strong>4:3</strong> photos (many phones and Micro Four Thirds cameras) are even taller
+          relative to 16:9 than 3:2. You still use <strong>Keep top</strong>,
+          <strong>Center</strong>, and <strong>Keep bottom</strong> for HD and 4K — only more
+          of the top and bottom is left out than in the diagrams here.
+        </p>
+        <p>
+          A very <strong>wide</strong> panorama (wider than 16:9) is trimmed on the
+          <strong>sides</strong> for HD and 4K instead of the top and bottom. Other aspect
+          ratios use the same controls; only which edges get cropped changes.
+        </p>
+      </section>
+
+      <section id="presets">
+        <h2>Output resolution after cropping</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Preset</th>
+              <th>Final size</th>
+              <th>Aspect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge">Instagram</span></td>
+              <td>1080 × 1920</td>
+              <td>9 : 16</td>
+            </tr>
+            <tr>
+              <td><span class="badge">HD</span></td>
+              <td>1920 × 1080</td>
+              <td>16 : 9</td>
+            </tr>
+            <tr>
+              <td><span class="badge">UHD</span></td>
+              <td>3840 × 2160</td>
+              <td>16 : 9</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="summary">
+        <h2>At a glance (typical 3:2 photo)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Output</th>
+              <th>What happens</th>
+              <th>App control</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>HD / UHD</td>
+              <td>Full width, horizontal 16:9 band; choose vertical placement.</td>
+              <td><strong>Position</strong>: Center, Keep top, Keep bottom</td>
+            </tr>
+            <tr>
+              <td>Instagram</td>
+              <td>Full height, narrow 9:16 strip; sides discarded, centered.</td>
+              <td><strong>Crop → Instagram</strong> only (no Position in GUI)</td>
+            </tr>
+            <tr>
+              <td>None + max size</td>
+              <td>No aspect-ratio crop; proportional scale to fit max width/height.</td>
+              <td><strong>Max width / height</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>See also</h2>
+        <p>
+          <a href="guide.html">User guide</a>
+          ·
+          <a href="index.html">Overview</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="index.html">Home</a>
+        ·
+        <a href="guide.html">Guide</a>
+        ·
+        <a href="privacy.html">Privacy</a>
+        ·
+        <a href="support.html">Support</a>
+      </p>
+    </footer>
+  </body>
+</html>

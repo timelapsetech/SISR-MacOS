@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mac user guide — SISR</title>
+    <meta
+      name="description"
+      content="How to use the native SISR Mac app: open a sequence, preview, crop, color, bitrate, deflicker, and render MP4, MOV, or GIF."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/icon-128.png" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="SISR home">
+          <img
+            class="brand__logo"
+            src="assets/icon-128.png"
+            width="36"
+            height="36"
+            alt=""
+            decoding="async"
+          />
+          <span>SISR</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="guide.html" aria-current="page">Guide</a>
+          <a href="crops.html">Crops</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="support.html">Support</a>
+          <a class="nav__download" href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >Download</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>User guide</h1>
+        <p class="lead">
+          How to use SISR on Mac — open a sequence, preview on the timeline, crop and
+          color, then export with AVFoundation.
+        </p>
+        <div class="btn-row">
+          <a
+            class="btn btn--download"
+            href="https://github.com/timelapsetech/SISR-MacOS/releases"
+            >Download for Mac</a
+          >
+          <a class="btn btn--ghost" href="crops.html">Crops &amp; framing</a>
+        </div>
+      </section>
+
+      <figure class="shot-hero shot-hero--inline">
+        <img
+          src="assets/screenshots/web-01-workspace.jpg"
+          alt="SISR workspace with left sequence panel, center viewer, and right inspector"
+          width="1600"
+          height="1000"
+          decoding="async"
+        />
+        <figcaption>Left: sequence &amp; encode · Center: viewer &amp; filmstrip · Right: crop &amp; color</figcaption>
+      </figure>
+
+      <section id="install">
+        <h2>Install</h2>
+        <ol class="steps">
+          <li>
+            On
+            <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>,
+            open an <strong><code>app-v*</code></strong> release (native SwiftUI app).
+          </li>
+          <li>
+            Download <strong>SISR-native-*-macos-universal.zip</strong>, unzip, and drag
+            <strong>SISR.app</strong> into Applications.
+          </li>
+          <li>
+            Open SISR. On first launch macOS may ask you to confirm the app (Gatekeeper).
+            Use <strong>System Settings → Privacy &amp; Security</strong> if needed.
+          </li>
+        </ol>
+        <p class="callout">
+          <strong>Sandbox note:</strong> the app asks for folder access when you open a
+          sequence or choose an output location. Grant access to the folders that hold your
+          photos and where you want renders to land.
+        </p>
+      </section>
+
+      <section id="open">
+        <h2>Open a sequence</h2>
+        <p>
+          Use <strong>Open…</strong> in the left sidebar (or <strong>File → Open</strong>).
+          Choose a folder that contains a <strong>numbered image sequence</strong>, for
+          example <code>Shoot_0001.JPG</code>, <code>Shoot_0002.JPG</code>, …
+        </p>
+        <ul>
+          <li>Common extensions: JPG, JPEG, PNG, TIFF, and others Core Image can read.</li>
+          <li>
+            The pattern and frame count appear under <strong>Details</strong> after a
+            successful scan.
+          </li>
+          <li>
+            <strong>Open Recent</strong> lists folders you have opened before (via security
+            bookmarks).
+          </li>
+          <li><strong>Close</strong> clears the current project from the window.</li>
+        </ul>
+        <p>
+          SISR opens <strong>one sequence folder at a time</strong> (not a parent folder of
+          many sequences).
+        </p>
+      </section>
+
+      <section id="viewer">
+        <h2>Viewer, playback, and in/out</h2>
+        <ul>
+          <li>Play / pause from the transport under the viewer.</li>
+          <li>Scrub with the filmstrip; the playhead shows the current frame.</li>
+          <li>
+            Set <strong>In</strong> and <strong>Out</strong> to trim which frames are
+            rendered. Duration updates from frame count ÷ frame rate.
+          </li>
+          <li>
+            Capture date/time for the current frame appears when metadata is available —
+            useful before enabling a date overlay.
+          </li>
+        </ul>
+      </section>
+
+      <section id="format">
+        <h2>Output size &amp; orientation</h2>
+        <p>
+          In the right inspector under <strong>Crop &amp; Frame</strong> →
+          <strong>Output size</strong>:
+        </p>
+        <ul>
+          <li>
+            <strong>Native</strong> — full frame at source resolution (no crop, no scale).
+          </li>
+          <li>
+            <strong>Scale fit</strong> — full frame, shrunk to a max width and/or height
+            while keeping aspect (never crops, never upscales). Set one limit, both, or use
+            a quick chip (for example 1920 wide).
+          </li>
+          <li>
+            Fixed presets (8K, DCI 4K, 4K UHD, 1440p, 1080p, 720p, 480p, 360p, NTSC, PAL,
+            Instagram Story, Square, Portrait 4:5) and <strong>Custom</strong> width × height.
+            Preset sizes lock crop aspect.
+          </li>
+        </ul>
+        <p>
+          A fitness badge appears when the crop can deliver the target without upscaling.
+          For how Keep top / Center / Keep bottom relate to 3:2 stills, see
+          <a href="crops.html">Crops &amp; framing</a>.
+        </p>
+      </section>
+
+      <section id="crop">
+        <h2>Crop &amp; transform</h2>
+        <p>In the right inspector under <strong>Crop &amp; Frame</strong>:</p>
+        <ul>
+          <li>Drag the white crop rectangle and its handles in the viewer.</li>
+          <li>Use <strong>Output size</strong> chips to pick Native, Scale fit, or any preset.</li>
+          <li>
+            <strong>Straighten</strong> — drag the slider or type degrees. Double-click the
+            slider to zero. Expand <strong>Rotate &amp; flips</strong> for 90° orientation
+            chips, Left / Right, flips, and reset.
+          </li>
+          <li>
+            Expand <strong>Align &amp; zoom</strong>, <strong>Resolution fitness</strong>,
+            and <strong>Flips &amp; reset</strong> only when you need those controls.
+          </li>
+        </ul>
+      </section>
+
+      <section id="color">
+        <h2>Color &amp; detail</h2>
+        <p>
+          All color tools live under one <strong>Color</strong> disclosure.
+          Expand it to tune exposure, contrast, highlights, shadows, and saturation — each
+          with a slider and a numeric field.
+        </p>
+        <p>
+          Sharpen, noise reduction, and vignette stay in a separate collapsed group so they
+          stay out of the way until you need them.
+        </p>
+        <figure class="shot-hero shot-hero--inline">
+          <img
+            src="assets/screenshots/web-03-color.jpg"
+            alt="Color adjustments expanded in the inspector"
+            width="1600"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </section>
+
+      <section id="overlay">
+        <h2>Overlay burn-in</h2>
+        <p>
+          In the left sidebar under <strong>Overlay</strong>, choose
+          <strong>Date</strong> or <strong>Frame</strong>. The badge appears inside the crop
+          on the viewer so you can check placement before rendering. Use
+          <strong>Background</strong> to set the badge fill opacity (default 50%); the
+          preview and final encode use the same value.
+        </p>
+      </section>
+
+      <section id="encode">
+        <h2>Encode, bitrate, and quality</h2>
+        <ul>
+          <li>
+            <strong>Codec</strong> — Default (H.264) for everyday MP4; other options (such as
+            ProRes / GIF) appear in the menu when available.
+          </li>
+          <li><strong>Frame rate</strong> — type or step the fps; duration updates.</li>
+          <li>
+            <strong>Bitrate &amp; quality</strong> — collapsed by default. The summary shows
+            auto targets (for example Mbps for 1080p / 4K). Expand to override average or
+            quality-oriented settings when you need Instagram-friendly or archive bitrates.
+          </li>
+        </ul>
+        <p class="callout">
+          Higher bitrates improve quality but increase file size and encode memory. Auto
+          values are chosen to look good at common resolutions without overfilling RAM on
+          long sequences.
+        </p>
+      </section>
+
+      <section id="deflicker">
+        <h2>Deflicker</h2>
+        <p>
+          Expand <strong>Deflicker</strong> and enable it to smooth brightness
+          across the in/out range before encoding. Analysis runs with a progress indicator
+          so long sequences do not look stuck at 0%.
+        </p>
+      </section>
+
+      <section id="render">
+        <h2>Render</h2>
+        <ol class="steps">
+          <li>Confirm size, orientation, codec, and in/out.</li>
+          <li>Click <strong>Render</strong> and choose where to save the file if prompted.</li>
+          <li>
+            Watch the progress card. You can cancel an in-flight render from the UI.
+          </li>
+        </ol>
+        <p>
+          If a file already exists at the destination, the app prefers a safe unique name
+          (or overwrite when sandbox permissions allow).
+        </p>
+      </section>
+
+      <section id="settings">
+        <h2>Settings &amp; projects</h2>
+        <ul>
+          <li>App settings cover defaults such as recent folders and UI preferences.</li>
+          <li>
+            Security-scoped bookmarks remember folders you have authorized so reopening a
+            sequence does not always require the Open panel.
+          </li>
+        </ul>
+      </section>
+
+      <section id="build">
+        <h2>Build from source</h2>
+        <p>
+          Developers can open <code>SISR.xcodeproj</code> or follow the
+          <a href="https://github.com/timelapsetech/SISR-MacOS#open--run">README</a>.
+          Shared rendering logic lives in the <strong>SISRKit</strong> Swift package.
+        </p>
+      </section>
+
+      <section id="help-more">
+        <h2>More help</h2>
+        <ul>
+          <li><a href="support.html">Support &amp; contact</a></li>
+          <li><a href="privacy.html">Privacy policy</a></li>
+          <li>
+            <a href="https://github.com/timelapsetech/SISR-MacOS/issues">GitHub issues</a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a href="index.html">Home</a>
+        ·
+        <a href="privacy.html">Privacy</a>
+        ·
+        <a href="support.html">Support</a>
+        ·
+        <a href="https://github.com/timelapsetech/SISR-MacOS">Source</a>
+      </p>
+    </footer>
+  </body>
+</html>
