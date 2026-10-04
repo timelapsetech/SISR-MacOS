@@ -292,13 +292,33 @@ public struct SequenceProjectSnapshot: Sendable {
     public var outputSize: PixelSize
     public var frameDates: [String]
 
+    public init(
+        sequence: ImageSequenceSpec?,
+        crop: CropState,
+        adjustments: Adjustments,
+        render: RenderSettings,
+        timeline: TimelineRange,
+        outputSize: PixelSize,
+        frameDates: [String] = []
+    ) {
+        self.sequence = sequence
+        self.crop = crop
+        self.adjustments = adjustments
+        self.render = render
+        self.timeline = timeline
+        self.outputSize = outputSize
+        self.frameDates = frameDates
+    }
+
     public init(from project: SequenceProject) {
-        sequence = project.sequence
-        crop = project.crop
-        adjustments = project.adjustments
-        render = project.render
-        timeline = project.timeline
-        outputSize = project.outputPixelSize
-        frameDates = project.frameDates
+        self.init(
+            sequence: project.sequence,
+            crop: project.crop,
+            adjustments: project.adjustments,
+            render: project.render,
+            timeline: project.timeline,
+            outputSize: project.outputPixelSize,
+            frameDates: project.frameDates
+        )
     }
 }

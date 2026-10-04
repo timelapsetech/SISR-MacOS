@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Render test coverage** in SISRKit: FramePipeline pixel checks (crop, orientation, overlay opacity, grade, preview flags) plus tiny encode smokes for every codec, in/out + date overlay, and deflicker.
+
 ## [1.0.4] - 2026-10-04
 
 ### Fixed
