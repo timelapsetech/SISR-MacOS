@@ -74,19 +74,38 @@ public final class FramePipeline: @unchecked Sendable {
         image = scaleToOutput(image, size: input.outputSize)
 
         if input.overlay != .none {
+            // Bake via Core Graphics so plate alpha matches SwiftUI preview
+            // (CI linear compositing looks washed out for the same opacity).
             image = OverlayRenderer.drawOverlay(
                 on: image,
                 overlay: input.overlay,
                 text: input.overlayText,
                 outputSize: input.outputSize,
                 numberWidth: 0,
-                backgroundOpacity: input.overlayBackgroundOpacity
+                backgroundOpacity: input.overlayBackgroundOpacity,
+                context: context
             )
         }
         return image
     }
 
     public func renderCGImage(from input: FramePipelineInput) -> CGImage? {
+        // Avoid CI→CG→overlay→CI→CG when burning in: composite the plate in CG once.
+        let wantsOverlay = input.overlay != .none && !input.compositionPreview && !input.showOriginal
+        if wantsOverlay {
+            var overlayInput = input
+            overlayInput.overlay = .none
+            guard let base = makeImage(from: overlayInput) else { return nil }
+            let rect = CGRect(origin: .zero, size: input.outputSize.cgSize)
+            guard let cg = context.createCGImage(base, from: rect) else { return nil }
+            return OverlayRenderer.burnIn(
+                on: cg,
+                overlay: input.overlay,
+                text: input.overlayText,
+                backgroundOpacity: input.overlayBackgroundOpacity
+            )
+        }
+
         guard let ci = makeImage(from: input) else { return nil }
         let rect: CGRect
         if input.compositionPreview || input.showOriginal {

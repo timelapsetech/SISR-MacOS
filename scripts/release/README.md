@@ -50,8 +50,8 @@ If notarization fails or times out, the script exits before stapling; see `xcrun
 2. Tag and push:
 
    ```bash
-   git tag app-v1.0.3
-   git push origin app-v1.0.3
+   git tag app-v1.0.4
+   git push origin app-v1.0.4
    ```
 
 3. Workflow **Release (macOS)** (`.github/workflows/release-macos.yml`) builds a universal `SISR.app`, signs, notarizes, and attaches `SISR-native-<version>-macos-universal.zip`.

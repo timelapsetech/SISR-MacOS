@@ -7,18 +7,21 @@ public enum OverlayRenderer {
     /// Relative margin from crop/output edges (matches historical burn-in layout).
     public static let edgeMarginFraction: CGFloat = 0.05
 
-    public static func drawOverlay(
-        on image: CIImage,
+    /// Burn the overlay into a CGImage using Core Graphics source-over blending.
+    ///
+    /// This matches SwiftUI's `Color.black.opacity(_:)` plate (gamma-encoded compositing).
+    /// Core Image's `composited(over:)` blends in a linear working space and makes the
+    /// same alpha look washed out / less solid than the viewer preview.
+    public static func burnIn(
+        on image: CGImage,
         overlay: OverlayType,
         text: String,
-        outputSize: PixelSize,
-        numberWidth _: Int,
         backgroundOpacity: Double = 0.5
-    ) -> CIImage {
+    ) -> CGImage {
         guard overlay != .none, !text.isEmpty || overlay == .frame else { return image }
 
-        let width = outputSize.width
-        let height = outputSize.height
+        let width = image.width
+        let height = image.height
         guard width > 0, height > 0 else { return image }
 
         let displayText: String
@@ -36,41 +39,30 @@ public enum OverlayRenderer {
             canvasHeight: height
         )
 
-        let rep = NSBitmapImageRep(
-            bitmapDataPlanes: nil,
-            pixelsWide: width,
-            pixelsHigh: height,
-            bitsPerSample: 8,
-            samplesPerPixel: 4,
-            hasAlpha: true,
-            isPlanar: false,
-            colorSpaceName: .deviceRGB,
+        let colorSpace = image.colorSpace ?? CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+        guard let ctx = CGContext(
+            data: nil,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
             bytesPerRow: 0,
-            bitsPerPixel: 0
-        )
-        guard let rep else { return image }
-        // Match point size to pixel size so 1pt == 1px when drawing overlays.
-        rep.size = NSSize(width: width, height: height)
-
-        NSGraphicsContext.saveGraphicsState()
-        guard let nsCtx = NSGraphicsContext(bitmapImageRep: rep) else {
-            NSGraphicsContext.restoreGraphicsState()
+            space: colorSpace,
+            bitmapInfo: bitmapInfo
+        ) else {
             return image
         }
-        NSGraphicsContext.current = nsCtx
-        let cg = nsCtx.cgContext
 
-        // Must start fully transparent. An uninitialized / opaque buffer makes
-        // source-over black@opacity blend to light gray and look washed out in render.
-        cg.setBlendMode(.copy)
-        cg.clear(CGRect(x: 0, y: 0, width: width, height: height))
+        let canvas = CGRect(x: 0, y: 0, width: width, height: height)
+        ctx.draw(image, in: canvas)
 
         let opacity = RenderSettings.clampOpacity(backgroundOpacity)
-        cg.setFillColor(gray: 0, alpha: CGFloat(opacity))
-        cg.fill(layout.boxRect)
+        ctx.setFillColor(red: 0, green: 0, blue: 0, alpha: CGFloat(opacity))
+        ctx.fill(layout.boxRect)
 
-        // Opaque white text over the translucent plate (normal compositing).
-        cg.setBlendMode(.normal)
+        NSGraphicsContext.saveGraphicsState()
+        let nsCtx = NSGraphicsContext(cgContext: ctx, flipped: false)
+        NSGraphicsContext.current = nsCtx
         let font = NSFont(name: "SFMono-Regular", size: layout.fontSize)
             ?? NSFont.monospacedSystemFont(ofSize: layout.fontSize, weight: .regular)
         let attrs: [NSAttributedString.Key: Any] = [
@@ -83,13 +75,35 @@ public enum OverlayRenderer {
             y: layout.boxRect.minY + layout.padding
         )
         nsText.draw(at: textOrigin)
-
         NSGraphicsContext.restoreGraphicsState()
 
-        guard let cgImage = rep.cgImage else { return image }
-        // Explicit premultiplied alpha so CI compositing matches SwiftUI's opacity plate.
-        let overlayCI = CIImage(cgImage: cgImage)
-        return overlayCI.composited(over: image)
+        return ctx.makeImage() ?? image
+    }
+
+    /// Bake overlay into a CI frame by rendering through CG (gamma-correct alpha).
+    public static func drawOverlay(
+        on image: CIImage,
+        overlay: OverlayType,
+        text: String,
+        outputSize: PixelSize,
+        numberWidth _: Int,
+        backgroundOpacity: Double = 0.5,
+        context: CIContext
+    ) -> CIImage {
+        guard overlay != .none, !text.isEmpty || overlay == .frame else { return image }
+        let rect = CGRect(origin: .zero, size: outputSize.cgSize)
+        guard rect.width > 0, rect.height > 0,
+              let cg = context.createCGImage(image, from: rect)
+        else {
+            return image
+        }
+        let burned = burnIn(
+            on: cg,
+            overlay: overlay,
+            text: text,
+            backgroundOpacity: backgroundOpacity
+        )
+        return CIImage(cgImage: burned)
     }
 
     /// Font size, padding, and badge rect in canvas pixel coordinates (Y-up, bottom-left origin).

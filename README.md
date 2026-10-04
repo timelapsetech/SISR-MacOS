@@ -4,7 +4,7 @@
 
 **Simple Image Sequence Renderer** — a native Mac app for turning numbered photo sequences into MP4, MOV, or GIF.
 
-**Version:** 1.0.3
+**Version:** 1.0.4
 
 Open a folder of stills, preview on a filmstrip, crop and grade interactively, then encode with Core Image + AVFoundation (no FFmpeg).
 
@@ -62,7 +62,7 @@ make test
 
 ## Release
 
-See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.0.3`) to build, notarize, and attach a universal zip.
+See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.0.4`) to build, notarize, and attach a universal zip.
 
 ## License
 
