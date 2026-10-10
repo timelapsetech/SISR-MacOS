@@ -8,7 +8,7 @@ struct SISRApp: App {
     @State private var recent = RecentDocumentsStore()
 
     var body: some Scene {
-        WindowGroup {
+        Window("SISR", id: "main") {
             ContentView()
                 .environment(settings)
                 .environment(recent)

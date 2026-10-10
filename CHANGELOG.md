@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-10-10
+
+### Fixed
+- **App Sandbox entitlements** — removed unused `com.apple.security.network.client` set to `false` (App Store Guideline 2.4.5(i); unused sandbox entitlements must be omitted, not disabled).
+- **Main window close** — single-window `Window` scene that quits when the last window closes, so closing the UI no longer leaves the app running with no way to reopen it (App Store Guideline 4).
+
 ### Added
 - **Render test coverage** in SISRKit: FramePipeline pixel checks (crop, orientation, overlay opacity, grade, preview flags) plus tiny encode smokes for every codec, in/out + date overlay, and deflicker.
 

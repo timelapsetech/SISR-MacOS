@@ -51,11 +51,12 @@
             decoding="async"
           />
         </p>
-        <p class="eyebrow">Native macOS app</p>
+        <p class="eyebrow">New native macOS app</p>
         <h1>Turn a folder of photos into a video</h1>
         <p class="lead">
-          <strong>SISR</strong> (Simple Image Sequence Renderer) is a free, open-source Mac
-          app for photographers and creators. Open a numbered stills folder, preview the
+          <strong>SISR</strong> (Simple Image Sequence Renderer) is a free, open-source
+          <strong>native Mac</strong> app for photographers and creators — rewritten in
+          SwiftUI with AVFoundation (no FFmpeg). Open a numbered stills folder, preview the
           sequence, crop and grade, then export <strong>MP4</strong>, <strong>MOV</strong>,
           or <strong>GIF</strong> — with optional date overlays and sizes ready for
           Instagram, HD, or 4K.
@@ -272,7 +273,7 @@
             </p>
             <ul class="card__list">
               <li>Asset: <code>SISR-native-*-macos-universal.zip</code></li>
-              <li>Tags: <code>app-v1.0.4</code> (and later)</li>
+              <li>Tags: <code>app-v1.0.5</code> (and later)</li>
               <li>Guide: <a href="guide.html">User guide</a></li>
             </ul>
             <p class="card__actions">
@@ -288,6 +289,11 @@
           <strong>Tip:</strong> On the Releases page, open an <code>app-v*</code> release,
           download the zip under Assets, unzip, and move <strong>SISR.app</strong> to
           Applications.
+        </p>
+        <p class="samples-showcase__lead" style="margin-top: 1.25rem">
+          Need the older cross-platform <strong>Python + FFmpeg</strong> tool instead?
+          See
+          <a href="https://github.com/timelapsetech/sisr">timelapsetech/sisr</a>.
         </p>
       </section>
 

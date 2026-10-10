@@ -10,6 +10,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NotificationCenter.default.post(name: .sisrOpenDirectoryURL, object: url)
     }
 
+    /// Single-window app: quit when the main window is closed so users aren't left
+    /// with a running app and no way to reopen the UI (App Store Guideline 4).
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        true
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         #if DEBUG
         // Dev-only: `SISR.app --open /path` or a bare folder argument.
