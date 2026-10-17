@@ -100,6 +100,7 @@ a:hover {
 .nav {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem 1rem;
   font-size: 0.95rem;
 }
@@ -112,13 +113,23 @@ a:hover {
   color: var(--text);
 }
 
-.nav a.nav__download {
-  color: #2dd4bf;
-  font-weight: 600;
+.app-store-badge,
+.app-store-badge:hover {
+  display: inline-block;
+  line-height: 0;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
 }
 
-.nav a.nav__download:hover {
-  color: #5eead4;
+.app-store-badge img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+.app-store-badge--lg img {
+  height: 54px;
 }
 
 main {
@@ -148,7 +159,7 @@ main {
 .btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
 }
 
@@ -204,18 +215,6 @@ main {
 
 .btn--primary:hover {
   background: var(--accent-dim);
-  color: #fff;
-}
-
-.btn--download {
-  background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
-  color: #fff;
-  border-color: #0f766e;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-.btn--download:hover {
-  background: linear-gradient(180deg, #2dd4bf 0%, #14b8a6 100%);
   color: #fff;
 }
 

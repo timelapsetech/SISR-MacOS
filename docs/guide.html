@@ -32,9 +32,18 @@
           <a href="crops.html">Crops</a>
           <a href="privacy.html">Privacy</a>
           <a href="support.html">Support</a>
-          <a class="nav__download" href="https://github.com/timelapsetech/SISR-MacOS/releases"
-            >Download</a
+          <a
+            class="app-store-badge"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
           >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="156"
+              height="40"
+            />
+          </a>
         </nav>
       </div>
     </header>
@@ -48,10 +57,17 @@
         </p>
         <div class="btn-row">
           <a
-            class="btn btn--download"
-            href="https://github.com/timelapsetech/SISR-MacOS/releases"
-            >Download for Mac</a
+            class="app-store-badge app-store-badge--lg"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
           >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="211"
+              height="54"
+            />
+          </a>
           <a class="btn btn--ghost" href="crops.html">Crops &amp; framing</a>
         </div>
       </section>
@@ -71,23 +87,41 @@
         <h2>Install</h2>
         <ol class="steps">
           <li>
-            On
-            <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>,
-            open an <strong><code>app-v*</code></strong> release (native SwiftUI app).
+            Install SISR from the
+            <a href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12">Mac App Store</a>.
           </li>
+          <li>Open SISR from Applications or Spotlight.</li>
           <li>
-            Download <strong>SISR-native-*-macos-universal.zip</strong>, unzip, and drag
-            <strong>SISR.app</strong> into Applications.
-          </li>
-          <li>
-            Open SISR. On first launch macOS may ask you to confirm the app (Gatekeeper).
-            Use <strong>System Settings → Privacy &amp; Security</strong> if needed.
+            The first time you open a sequence or choose an output folder, grant access when
+            macOS asks.
           </li>
         </ol>
+        <p>
+          <a
+            class="app-store-badge"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
+          >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="156"
+              height="40"
+            />
+          </a>
+        </p>
         <p class="callout">
           <strong>Sandbox note:</strong> the app asks for folder access when you open a
           sequence or choose an output location. Grant access to the folders that hold your
           photos and where you want renders to land.
+        </p>
+        <p>
+          Developers can also download a notarized zip from
+          <a href="https://github.com/timelapsetech/SISR-MacOS/releases">GitHub Releases</a>
+          (<code>SISR-native-*-macos-universal.zip</code>) or build from source. After a
+          direct download, macOS may block the first launch. Open
+          <strong>System Settings → Privacy &amp; Security</strong> and allow SISR, or
+          right-click the app and choose <strong>Open</strong>.
         </p>
         <p>
           This guide is for the <strong>native Mac app</strong> (this project). The older

@@ -17,7 +17,11 @@ Looking for the original cross-platform **Python + FFmpeg** SISR? That project l
 
 ## Download
 
-Get a notarized build from [GitHub Releases](https://github.com/timelapsetech/SISR-MacOS/releases) (`SISR-native-*-macos-universal.zip`), or build from source below.
+[![Download on the Mac App Store](docs/assets/download-on-the-mac-app-store.svg)](https://apps.apple.com/us/app/sisr/id6818915389?mt=12)
+
+SISR is free on the [Mac App Store](https://apps.apple.com/us/app/sisr/id6818915389?mt=12). It requires macOS 14 Sonoma or later.
+
+To build from source, see below. Notarized zips are also attached to [GitHub Releases](https://github.com/timelapsetech/SISR-MacOS/releases) (`SISR-native-*-macos-universal.zip`).
 
 User docs: [docs/](docs/index.html) (guide, crops, privacy, support).
 
