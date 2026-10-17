@@ -6,6 +6,7 @@ struct ViewerView: View {
     @Bindable var project: SequenceProject
     var frameCache: FrameCache
     var playback: PlaybackController
+    var deflicker: DeflickerController
 
     @State private var compositionImage: NSImage?
     @State private var debounce: Task<Void, Never>?
@@ -112,6 +113,7 @@ struct ViewerView: View {
                 refreshPreview(in: geo.size)
             }
             .onChange(of: project.adjustments) { _, _ in refreshPreview(in: geo.size) }
+            .onChange(of: deflicker.solutionVersion) { _, _ in refreshPreview(in: geo.size) }
             .onChange(of: project.showOriginal) { _, _ in refreshPreview(in: geo.size) }
             .onChange(of: project.previewOutputFull) { _, _ in refreshPreview(in: geo.size) }
             .onChange(of: project.render.preset) { _, _ in refreshPreview(in: geo.size) }
@@ -275,6 +277,9 @@ struct ViewerView: View {
         let showOriginal = project.showOriginal
         let bakeOutput = project.previewOutputFull && !showOriginal
         let adjustments = showOriginal ? Adjustments.identity : project.adjustments
+        let correction = showOriginal || !adjustments.deflicker.enabled
+            ? DeflickerCorrection.identity
+            : deflicker.correction(at: playhead) ?? .identity
         // Cap bake resolution to the viewer — full 4K/8K isn't needed on screen.
         let outputSize = bakeOutput
             ? previewPixelSize(
@@ -294,7 +299,7 @@ struct ViewerView: View {
                 showOriginal: showOriginal,
                 // Preview Full bakes crop/scale; burn-in stays in SwiftUI for correct opacity.
                 compositionPreview: !showOriginal && !bakeOutput,
-                exposureBias: 0
+                deflicker: correction
             )
             guard let cg = FramePipeline().renderCGImage(from: input) else { return nil }
             return NSImage(cgImage: cg, size: NSSize(width: cg.width, height: cg.height))

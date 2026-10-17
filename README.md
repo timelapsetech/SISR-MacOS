@@ -4,7 +4,7 @@
 
 **Simple Image Sequence Renderer** — a **new, native Mac app** for turning numbered photo sequences into MP4, MOV, or GIF.
 
-**Version:** 1.0.5
+**Version:** 1.1.0
 
 This repository is the SwiftUI / AVFoundation rewrite for macOS. It is not a wrapper around the older tool: open a folder of stills, preview on a filmstrip, crop and grade interactively, then encode with Core Image + AVFoundation (**no FFmpeg, no Python runtime**).
 
@@ -23,7 +23,7 @@ SISR is free on the [Mac App Store](https://apps.apple.com/us/app/sisr/id6818915
 
 To build from source, see below. Notarized zips are also attached to [GitHub Releases](https://github.com/timelapsetech/SISR-MacOS/releases) (`SISR-native-*-macos-universal.zip`).
 
-User docs: [docs/](docs/index.html) (guide, crops, privacy, support).
+User docs: [docs/](docs/index.html) (feature tour, guide, crops, privacy, support).
 
 ## Open & run
 
@@ -61,7 +61,7 @@ make test
 
 - Source / Output / Overlay sidebar
 - Center viewer + filmstrip timeline with in/out points, J/K/L, I/O
-- Inspector: crop with aspect lock & resolution checks, transform, color, detail, deflicker
+- Inspector: crop with aspect lock & resolution checks, transform, color, detail, deflicker (modes for sun/cloud, day-to-night, and locked exposure)
 - Codecs: H.264, HEVC, ProRes, ProRes HQ, GIF
 - Live render progress (sidebar card, toolbar, Dock badge, notification)
 - Per-sequence state autosave; security-scoped bookmarks; Open Recent
@@ -75,7 +75,7 @@ make test
 
 ## Release
 
-See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.0.5`) to build, notarize, and attach a universal zip.
+See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.1.0`) to build, notarize, and attach a universal zip.
 
 ## License
 

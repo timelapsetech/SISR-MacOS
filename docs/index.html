@@ -6,7 +6,7 @@
     <title>SISR — Simple Image Sequence Renderer for Mac</title>
     <meta
       name="description"
-      content="Native Mac app to turn numbered photo sequences into MP4, MOV, or GIF. Preview, crop, color, and encode with AVFoundation. Free on the Mac App Store."
+      content="Native Mac app to turn numbered photo sequences into MP4, MOV, or GIF. Preview, crop, color, deflicker time-lapse, and encode with AVFoundation. Free on the Mac App Store."
     />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
     <link rel="apple-touch-icon" href="assets/icon-128.png" />
@@ -27,6 +27,7 @@
           <span>SISR</span>
         </a>
         <nav class="nav" aria-label="Primary">
+          <a href="features.html">Features</a>
           <a href="guide.html">Guide</a>
           <a href="crops.html">Crops</a>
           <a href="privacy.html">Privacy</a>
@@ -60,7 +61,7 @@
             decoding="async"
           />
         </p>
-        <p class="eyebrow">New native macOS app</p>
+        <p class="eyebrow">New in version 1.1</p>
         <h1>Turn a folder of photos into a video</h1>
         <p class="lead">
           <strong>SISR</strong> (Simple Image Sequence Renderer) is a free, open-source
@@ -68,7 +69,8 @@
           SwiftUI with AVFoundation (no FFmpeg). Open a numbered stills folder, preview the
           sequence, crop and grade, then export <strong>MP4</strong>, <strong>MOV</strong>,
           or <strong>GIF</strong> — with optional date overlays and sizes ready for
-          Instagram, HD, or 4K.
+          Instagram, HD, or 4K. Version 1.1 adds advanced deflicker for time-lapse that
+          jumps between sun, cloud, and day-to-night exposure.
         </p>
         <div class="btn-row">
           <a
@@ -83,7 +85,8 @@
               height="54"
             />
           </a>
-          <a class="btn btn--primary" href="guide.html">User guide</a>
+          <a class="btn btn--primary" href="features.html">Feature tour</a>
+          <a class="btn btn--ghost" href="guide.html">User guide</a>
           <a class="btn btn--ghost" href="crops.html">Crops &amp; framing</a>
         </div>
         <p class="download-hint">
@@ -174,8 +177,8 @@
             <h3>Encode with confidence</h3>
             <p>
               H.264 (and more) with auto bitrates sized for 1080p and 4K, or open
-              <strong>Bitrate &amp; quality</strong> to override. Deflicker analysis reports
-              progress before you render.
+              <strong>Bitrate &amp; quality</strong> to override. Analyze deflicker first
+              and preview the balanced frames before you render.
             </p>
           </article>
           <article class="card">
@@ -194,6 +197,79 @@
             </p>
           </article>
         </div>
+      </section>
+
+      <section id="deflicker" aria-labelledby="deflicker-heading">
+        <h2 id="deflicker-heading">Advanced deflicker for time-lapse</h2>
+        <p class="samples-showcase__lead">
+          A typical time-lapse can go from full sun to full cloud in a single frame, or
+          step its exposure all the way to night. Version 1.1 measures brightness,
+          contrast, and color on the cropped, graded picture — then shows the correction
+          on a chart and in the viewer before you render.
+          <a href="guide.html#deflicker">How to use it</a>.
+        </p>
+        <div class="card-grid">
+          <article class="card">
+            <h3>Standard</h3>
+            <p>
+              Smooths frame-to-frame exposure jitter from aperture flicker or an
+              auto-exposure hunt, and keeps the slow brightness changes that belong in
+              the shot.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Sun &amp; clouds</h3>
+            <p>
+              For sequences that swing between direct sun and overcast. A wide,
+              outlier-resistant window ignores a single bright gap, then matches contrast,
+              color, and regional brightness so a sunlit foreground and a shaded sky can
+              both settle.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Day-to-night</h3>
+            <p>
+              For Holy Grail sunrises and sunsets. SISR reads shutter, aperture, and ISO
+              from each frame and removes the exposure steps the camera made, while the
+              natural fade from day to night stays in place.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Locked look</h3>
+            <p>
+              Holds the whole in/out range at one brightness — the median of the range,
+              or a reference frame you pick — when you want a consistent exposure from
+              the first frame to the last.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Gentle</h3>
+            <p>
+              A light pass for sequences that are almost clean and only need a little
+              evening out.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Preview before render</h3>
+            <p>
+              Analyze the sequence, then scrub the chart or the filmstrip. Orange is
+              measured brightness, the dashed line is the target, and green is the
+              corrected result. The viewer shows that frame’s correction immediately.
+            </p>
+          </article>
+        </div>
+        <p>
+          Under the modes, Advanced controls choose how the balance is built: robust,
+          Gaussian, or average smoothing; full-frame, ignore-sky, or center metering; a
+          regional brightness grid; and separate switches for contrast matching, color
+          balance, and camera EXIF. A max-correction limit keeps any one frame from being
+          pushed too far.
+        </p>
+        <p class="callout">
+          Deflicker evens out exposure and color. Hard shadows that move between sunny
+          and overcast frames stay in the picture — they are geometry, not a brightness
+          offset.
+        </p>
       </section>
 
       <section id="samples" class="samples-showcase" aria-labelledby="samples-heading">
@@ -265,6 +341,7 @@
         <h2>Who it is for</h2>
         <ul>
           <li>Photographers turning still sequences into short videos</li>
+          <li>Time-lapse shooters balancing sun, cloud, and day-to-night exposure</li>
           <li>Creators who want dates or frame numbers burned into the picture</li>
           <li>Anyone who prefers a focused Mac app over configuring NLE export by hand</li>
         </ul>
@@ -336,7 +413,8 @@
               height="40"
             />
           </a>
-          <a class="btn btn--primary" href="guide.html">User guide</a>
+          <a class="btn btn--primary" href="features.html">Feature tour</a>
+          <a class="btn btn--ghost" href="guide.html">User guide</a>
         </div>
       </section>
     </main>

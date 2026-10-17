@@ -78,45 +78,39 @@ public actor Renderer {
 
         emit(done: 0, status: "Preparing…")
 
-        // Deflicker analysis (optional) — advance the same progress bar while measuring frames.
-        var exposureBiases = Array(repeating: 0.0, count: total)
-        if project.adjustments.deflicker.enabled {
-            let analyzer = DeflickerAnalyzer()
-            let urls = frames.map(\.url)
-            let startedAt = start
-            do {
-                exposureBiases = try await analyzer.analyze(
-                    urls: urls,
-                    settings: project.adjustments.deflicker,
-                    progress: { done, frameTotal in
-                        let elapsed = Date().timeIntervalSince(startedAt)
-                        let fps = elapsed > 0 ? Double(done) / elapsed : 0
-                        let remaining = done > 0
-                            ? (elapsed / Double(done)) * Double(frameTotal - done)
-                            : nil
-                        progress(RenderProgress(
-                            framesDone: done,
-                            framesTotal: frameTotal,
-                            framesPerSecond: fps,
-                            elapsed: elapsed,
-                            eta: remaining,
-                            statusMessage: "Analyzing deflicker…"
-                        ))
-                    },
-                    isCancelled: { Task.isCancelled }
+        // Deflicker (optional) — reuse the inspector's analysis when it still matches,
+        // otherwise measure here and advance the same progress bar.
+        var deflickerCorrections = Array(repeating: DeflickerCorrection.identity, count: total)
+        let deflicker = project.adjustments.deflicker
+        if deflicker.enabled {
+            let key = DeflickerAnalysisKey(project: project)
+            var stats: [DeflickerFrameStats]?
+            if let key, let cached = project.deflickerAnalysis {
+                stats = cached.stats(for: range, key: key)
+            }
+            if stats == nil {
+                stats = try await analyzeDeflicker(
+                    project: project,
+                    urls: frames.map(\.url),
+                    start: start,
+                    progress: progress,
+                    emitCancelled: { emit(done: 0, cancelled: true) }
                 )
-            } catch RenderError.cancelled {
-                emit(done: 0, cancelled: true)
-                throw RenderError.cancelled
+                if cancelFlag || Task.isCancelled {
+                    emit(done: 0, cancelled: true)
+                    throw RenderError.cancelled
+                }
+                pipeline.clearCaches()
             }
-            if cancelFlag || Task.isCancelled {
-                emit(done: 0, cancelled: true)
-                throw RenderError.cancelled
+            let solution = DeflickerSolver.solve(
+                stats: stats ?? [],
+                settings: deflicker,
+                referenceIndex: deflicker.referenceFrame.map { $0 - range.inIndex }
+            )
+            if solution.corrections.count == total {
+                deflickerCorrections = solution.corrections
             }
-            pipeline.clearCaches()
         }
-
-        emit(done: 0, status: "Opening writer…")
 
         if settings.codec == .gif {
             let stream = try GIFWriter.Stream(
@@ -148,7 +142,7 @@ public actor Renderer {
                             overlayText: overlayText,
                             overlayBackgroundOpacity: settings.overlayBackgroundOpacity,
                             showOriginal: false,
-                            exposureBias: exposureBiases.indices.contains(i) ? exposureBiases[i] : 0
+                            deflicker: deflickerCorrections[i]
                         )
                         guard let cg = pipeline.renderCGImage(from: input) else {
                             throw RenderError.frameFailed(i)
@@ -211,7 +205,7 @@ public actor Renderer {
                         overlayText: overlayText,
                         overlayBackgroundOpacity: settings.overlayBackgroundOpacity,
                         showOriginal: false,
-                        exposureBias: exposureBiases.indices.contains(i) ? exposureBiases[i] : 0
+                        deflicker: deflickerCorrections[i]
                     )
                     guard let ci = pipeline.makeImage(from: input) else {
                         writer.cancel()
@@ -239,6 +233,42 @@ public actor Renderer {
             writer.cancel()
             pipeline.clearCaches()
             throw error
+        }
+    }
+
+    private func analyzeDeflicker(
+        project: SequenceProjectSnapshot,
+        urls: [URL],
+        start: Date,
+        progress: @Sendable @escaping (RenderProgress) -> Void,
+        emitCancelled: () -> Void
+    ) async throws -> [DeflickerFrameStats] {
+        do {
+            return try await DeflickerAnalyzer().analyze(
+                urls: urls,
+                crop: project.crop,
+                adjustments: project.adjustments,
+                outputSize: project.outputSize,
+                progress: { done, frameTotal in
+                    let elapsed = Date().timeIntervalSince(start)
+                    let fps = elapsed > 0 ? Double(done) / elapsed : 0
+                    let remaining = done > 0
+                        ? (elapsed / Double(done)) * Double(frameTotal - done)
+                        : nil
+                    progress(RenderProgress(
+                        framesDone: done,
+                        framesTotal: frameTotal,
+                        framesPerSecond: fps,
+                        elapsed: elapsed,
+                        eta: remaining,
+                        statusMessage: "Analyzing deflicker…"
+                    ))
+                },
+                isCancelled: { Task.isCancelled }
+            )
+        } catch RenderError.cancelled {
+            emitCancelled()
+            throw RenderError.cancelled
         }
     }
 
@@ -291,6 +321,8 @@ public struct SequenceProjectSnapshot: Sendable {
     public var timeline: TimelineRange
     public var outputSize: PixelSize
     public var frameDates: [String]
+    /// Previously measured deflicker stats; used only when its key matches this snapshot.
+    public var deflickerAnalysis: DeflickerAnalysis?
 
     public init(
         sequence: ImageSequenceSpec?,
@@ -299,7 +331,8 @@ public struct SequenceProjectSnapshot: Sendable {
         render: RenderSettings,
         timeline: TimelineRange,
         outputSize: PixelSize,
-        frameDates: [String] = []
+        frameDates: [String] = [],
+        deflickerAnalysis: DeflickerAnalysis? = nil
     ) {
         self.sequence = sequence
         self.crop = crop
@@ -308,9 +341,10 @@ public struct SequenceProjectSnapshot: Sendable {
         self.timeline = timeline
         self.outputSize = outputSize
         self.frameDates = frameDates
+        self.deflickerAnalysis = deflickerAnalysis
     }
 
-    public init(from project: SequenceProject) {
+    public init(from project: SequenceProject, deflickerAnalysis: DeflickerAnalysis? = nil) {
         self.init(
             sequence: project.sequence,
             crop: project.crop,
@@ -318,7 +352,8 @@ public struct SequenceProjectSnapshot: Sendable {
             render: project.render,
             timeline: project.timeline,
             outputSize: project.outputPixelSize,
-            frameDates: project.frameDates
+            frameDates: project.frameDates,
+            deflickerAnalysis: deflickerAnalysis
         )
     }
 }

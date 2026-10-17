@@ -23,7 +23,11 @@ final class RenderController {
     private let renderAccess = BookmarkStore.RenderAccess()
     private var didRequestNotificationAuth = false
 
-    func start(project: SequenceProject, frameCache: FrameCache? = nil) {
+    func start(
+        project: SequenceProject,
+        frameCache: FrameCache? = nil,
+        deflickerAnalysis: DeflickerAnalysis? = nil
+    ) {
         guard !isRendering, project.hasSequence else { return }
 
         project.clearOutputIfPointsAtSource()
@@ -42,7 +46,7 @@ final class RenderController {
         pendingProgress = nil
         publishTask?.cancel()
         frameCache?.pauseForRender()
-        let snapshot = SequenceProjectSnapshot(from: project)
+        let snapshot = SequenceProjectSnapshot(from: project, deflickerAnalysis: deflickerAnalysis)
 
         renderTask = Task { [renderer, self] in
             do {

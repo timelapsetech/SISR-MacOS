@@ -248,7 +248,7 @@ struct FramePipelineTests {
         #expect(sample.luma < 0.35)
     }
 
-    @Test func exposureBiasBrightensFrame() throws {
+    @Test func deflickerExposureBrightensFrame() throws {
         let dir = try TestSupport.makeTempDir(prefix: "sisr-pipe-grade")
         defer { try? FileManager.default.removeItem(at: dir) }
         let spec = try TestSupport.writeSolidSequence(
@@ -270,7 +270,7 @@ struct FramePipelineTests {
             imageURL: spec.frames[0].url,
             outputSize: output,
             adjustments: Adjustments(color: ColorAdjustments(exposure: 1.0)),
-            exposureBias: 0.5
+            deflicker: DeflickerCorrection(exposureEV: 0.5)
         )))
         let a = try TestSupport.sampleCenter(identity)
         let b = try TestSupport.sampleCenter(boosted)

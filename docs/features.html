@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Features — SISR</title>
+    <meta
+      name="description"
+      content="Close-up tour of SISR for Mac: crop and frame, resolution fitness, align and zoom, straighten, color, detail, date overlay, and encode."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" href="assets/icon-128.png" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" aria-label="SISR home">
+          <img
+            class="brand__logo"
+            src="assets/icon-128.png"
+            width="36"
+            height="36"
+            alt=""
+            decoding="async"
+          />
+          <span>SISR</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="features.html" aria-current="page">Features</a>
+          <a href="guide.html">Guide</a>
+          <a href="crops.html">Crops</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="support.html">Support</a>
+          <a
+            class="app-store-badge"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
+          >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="156"
+              height="40"
+            />
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Version 1.1</p>
+        <h1>The controls, up close</h1>
+        <p class="lead">
+          SISR keeps the everyday path short and tucks the precise tools one disclosure
+          away. These are the inspector and sidebar controls you use to frame a still
+          sequence, grade it, stamp a date, and encode — with a short how-to for each.
+        </p>
+        <div class="btn-row">
+          <a
+            class="app-store-badge app-store-badge--lg"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
+          >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="211"
+              height="54"
+            />
+          </a>
+          <a class="btn btn--ghost" href="guide.html">Full user guide</a>
+          <a class="btn btn--ghost" href="index.html#deflicker">Deflicker</a>
+        </div>
+      </section>
+
+      <section id="crop" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/crop-frame.png"
+            alt="Crop and Frame inspector with aspect, output size chips, crop pixels, and output pixels"
+            width="598"
+            height="414"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Crop &amp; frame</h2>
+          <p>
+            Turn a camera still into a delivery frame without leaving the sequence.
+            Aspect, output size, and the two pixel readouts stay in one section so you
+            can see the crop you are taking and the picture you will encode.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Open <strong>Crop &amp; Frame</strong> on the right.</li>
+            <li>
+              Set <strong>Aspect</strong> (16:9 in the shot) or pick an
+              <strong>Output size</strong> chip. Preset sizes lock the crop to that frame.
+            </li>
+            <li>
+              <strong>Native</strong> keeps the full photo at its own resolution.
+              <strong>Scale fit</strong> shrinks the full frame to a max width or height
+              and never crops or enlarges. Chips such as <strong>4K UHD</strong> and
+              <strong>DCI 4K</strong> crop to a fixed delivery size.
+            </li>
+            <li>
+              Read <strong>Crop pixels</strong> (what you keep from the still) and
+              <strong>Output pixels</strong> (what the file will be). Drag the rectangle
+              in the viewer when you want to place it by hand.
+            </li>
+          </ol>
+          <p>
+            Framing diagrams for Keep top, Center, and Keep bottom are on the
+            <a href="crops.html">crops page</a>.
+          </p>
+        </div>
+      </section>
+
+      <section id="fitness" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/resolution-fitness.png"
+            alt="Resolution fitness list comparing 8K through 360p, with Native and Heavy upscale badges"
+            width="600"
+            height="606"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Resolution fitness</h2>
+          <p>
+            A green <strong>Native</strong> badge means the current crop already has the
+            pixels for that size. A red <strong>Heavy upscale</strong> badge means the
+            render would enlarge the crop to get there — fine for a draft, costly for a
+            master. The list is the fastest way to pick a size your photos can actually
+            support.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Expand <strong>Resolution fitness</strong> under Crop &amp; Frame.</li>
+            <li>
+              Scan the sizes: 8K, 4K, 1440p, 1080p, 720p, Instagram Story, and the smaller
+              presets. Each row shows the target pixels and a fitness badge.
+            </li>
+            <li>
+              Click a row to apply that output size. In this example 4K UHD is Native,
+              while 8K would upscale the crop by 141%.
+            </li>
+            <li>
+              If the chosen size still needs enlargement, a warning appears above the list
+              with the crop size and the scale.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="align" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/align-zoom.png"
+            alt="Align and zoom controls with a 1.20× zoom slider and Top, Center, Bottom, Left, and Right buttons"
+            width="596"
+            height="352"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Align &amp; zoom</h2>
+          <p>
+            Punch in on a subject, then snap the frame to an edge. Useful for a horizon
+            that should sit on the top or bottom third, or a build that belongs on the
+            left of a 16:9 frame.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Expand <strong>Align &amp; zoom</strong>.</li>
+            <li>
+              Drag <strong>Zoom</strong> from 1.00× to 4.00×, or type a value. 1.00× is the
+              largest crop that still fills the aspect. Double-click the slider to return
+              to 1.00×.
+            </li>
+            <li>
+              Tap <strong>Top</strong>, <strong>Center</strong>, <strong>Bottom</strong>,
+              <strong>Left</strong>, or <strong>Right</strong> to slide that crop against
+              the matching edge of the photo. Center is the balanced default.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="transform" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/transform.png"
+            alt="Straighten slider at 0 degrees, 90-degree rotate chips, flip toggles, and Reset Transform"
+            width="608"
+            height="520"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Straighten, rotate, and flip</h2>
+          <p>
+            Level a horizon, turn a camera that was shot on its side into a vertical
+            video, or mirror a frame. Straighten is always visible. Quarter-turns and
+            flips stay inside <strong>Rotate &amp; flips</strong> until you need them.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>
+              Drag <strong>Straighten</strong> between −45° and 45°, or type the degrees.
+              Double-click the slider to return to 0°. The viewer zooms just enough to
+              keep the tilted crop filled.
+            </li>
+            <li>
+              Expand <strong>Rotate &amp; flips</strong>. The chips set 0°, 90°, 180°, or
+              270°. <strong>Left 90°</strong> and <strong>Right 90°</strong> step from
+              wherever you are.
+            </li>
+            <li>
+              <strong>Flip Horizontal</strong> and <strong>Flip Vertical</strong> mirror
+              the frame. <strong>Reset Transform</strong> clears straighten, rotation, and
+              both flips together.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="color" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/color.png"
+            alt="Color sliders for exposure, contrast, highlights, shadows, saturation, vibrance, temperature, and tint, plus Auto and Reset"
+            width="600"
+            height="942"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Color</h2>
+          <p>
+            One grade for the whole sequence: exposure and contrast for the overall look,
+            highlights and shadows for the ends of the tonal range, and white balance when
+            a camera drifted warm or cool across the shoot. Every slider has a numeric
+            field, so a look can be repeated exactly.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Expand <strong>Color</strong>.</li>
+            <li>
+              <strong>Exposure</strong> runs from −2 to +2 stops. Contrast, highlights,
+              shadows, saturation, vibrance, temperature, and tint run from −1 to +1.
+              Type a number or drag. Double-click a slider to zero it.
+            </li>
+            <li>
+              <strong>Highlights</strong> and <strong>Shadows</strong> lift or hold the
+              bright and dark ends without moving the whole frame.
+              <strong>Vibrance</strong> pushes muted color first;
+              <strong>Saturation</strong> pushes every color.
+              <strong>Temperature</strong> and <strong>Tint</strong> set white balance.
+            </li>
+            <li>
+              <strong>Auto</strong> applies a light starting grade (a little shadow lift,
+              contrast, and vibrance). <strong>Reset</strong> returns every color slider
+              to zero. The viewer updates as you move.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="detail" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/detail.png"
+            alt="Detail section with Sharpen, Noise Reduction, and Vignette sliders and a Reset Detail button"
+            width="594"
+            height="430"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Right inspector</p>
+          <h2>Detail</h2>
+          <p>
+            Finish the picture after the grade. Sharpen brings back edge detail in a
+            scaled frame, noise reduction calms a high-ISO night frame, and vignette
+            darkens the corners so the subject holds the frame. All three stay collapsed
+            until you open them.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Expand <strong>Detail</strong>.</li>
+            <li>
+              Each slider runs from 0 to 1. Leave them at 0 when the photos are already
+              clean. Double-click a slider to clear just that control.
+            </li>
+            <li>
+              <strong>Reset Detail</strong> returns sharpen, noise reduction, and vignette
+              to zero together.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="overlay" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/overlay.png"
+            alt="Overlay burn-in set to Date, with Month selected, a preview reading April, and background opacity at 50 percent"
+            width="566"
+            height="576"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Left sidebar</p>
+          <h2>Date and frame burn-in</h2>
+          <p>
+            Stamp the capture date or a frame number into the picture — the usual ask for
+            a build, a garden, or a trip. The badge is drawn inside the crop on the viewer,
+            so placement and opacity match the file you render.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>In the left sidebar, open <strong>Overlay</strong>.</li>
+            <li>
+              Set <strong>Burn-in</strong> to <strong>None</strong>, <strong>Date</strong>,
+              or <strong>Frame</strong>.
+            </li>
+            <li>
+              For a date, turn on the parts you want: <strong>Day</strong> (weekday),
+              <strong>Month</strong>, <strong>Date</strong> (day of the month),
+              <strong>Year</strong>, and <strong>Time</strong>. The sample line updates
+              immediately — Month alone reads “April” when that is the frame’s month.
+              Dates come from camera metadata when the file has it.
+            </li>
+            <li>
+              For a frame number, choose <strong>From in point</strong> (1, 2, 3… inside
+              the range you render) or <strong>Source numbers</strong> (the number in the
+              filename).
+            </li>
+            <li>
+              <strong>Background</strong> sets the badge fill from 0% to 100%. 50% is the
+              default. The viewer preview and the encode use the same value.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="encode" class="feature">
+        <figure class="feature__shot">
+          <img
+            src="assets/features/encode.png"
+            alt="Encode section with H.264 codec, 24 fps, a duration of 844 frames and 35.2 seconds, and bitrate summary"
+            width="566"
+            height="428"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <div class="feature__copy">
+          <p class="eyebrow">Left sidebar</p>
+          <h2>Encode</h2>
+          <p>
+            Pick the file type and the pace, then let the duration tell you how long the
+            movie will be. Bitrate stays collapsed, with the automatic average and peak
+            already shown, until you need an archive or a smaller social file.
+          </p>
+          <h3>How to use it</h3>
+          <ol class="steps">
+            <li>Open <strong>Encode</strong> in the left sidebar.</li>
+            <li>
+              <strong>Codec</strong> defaults to H.264 (MP4). HEVC, ProRes, ProRes HQ, and
+              GIF are in the same menu. ProRes writes a MOV; GIF writes a GIF.
+            </li>
+            <li>
+              Set <strong>Frame rate</strong> with the stepper or by typing. Duration is
+              the in/out frame count divided by that rate — 844 frames at 24 fps is 35.2
+              seconds.
+            </li>
+            <li>
+              The <strong>Bitrate &amp; quality</strong> summary is average / peak, sized
+              for the output resolution (20 / 25 Mbps in the shot). Expand it to override
+              either number or switch to a quality target. Leave it closed to keep the
+              automatic rates.
+            </li>
+          </ol>
+          <p class="callout">
+            Higher bitrates hold more detail and make a larger file. Automatic rates are
+            chosen for common sizes such as 1080p and 4K.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Put a sequence together</h2>
+        <p>
+          Frame it, grade it, stamp it, then render. Deflicker for sun, cloud, and
+          day-to-night lives on the <a href="index.html#deflicker">home page</a>, with the
+          full control list in the <a href="guide.html#deflicker">user guide</a>.
+        </p>
+        <div class="download-inline">
+          <a
+            class="app-store-badge"
+            href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12"
+            aria-label="Download on the Mac App Store"
+          >
+            <img
+              src="assets/download-on-the-mac-app-store.svg"
+              alt="Download on the Mac App Store"
+              width="156"
+              height="40"
+            />
+          </a>
+          <a class="btn btn--primary" href="guide.html">User guide</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Simple Image Sequence Renderer — open source under the MIT License.
+        <a href="https://github.com/timelapsetech/SISR-MacOS">Source</a>
+        ·
+        <a href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12">Mac App Store</a>
+        ·
+        <a href="privacy.html">Privacy</a>
+        ·
+        <a href="support.html">Support</a>
+      </p>
+    </footer>
+  </body>
+</html>

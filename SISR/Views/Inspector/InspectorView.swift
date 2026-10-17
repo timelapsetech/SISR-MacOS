@@ -3,6 +3,7 @@ import SISRKit
 
 struct InspectorView: View {
     @Bindable var project: SequenceProject
+    var deflicker: DeflickerController
 
     var body: some View {
         Form {
@@ -18,7 +19,7 @@ struct InspectorView: View {
             TransformSection(project: project)
             ColorSection(project: project)
             DetailSection(project: project)
-            DeflickerSection(project: project)
+            DeflickerSection(project: project, controller: deflicker)
         }
         .formStyle(.grouped)
         .background(.regularMaterial)
@@ -596,76 +597,6 @@ struct DetailSection: View {
         project.adjustments.detail.isIdentity
             ? "Sharpen, noise reduction, vignette"
             : "Adjustments active"
-    }
-}
-
-// MARK: - Deflicker
-
-struct DeflickerSection: View {
-    @Bindable var project: SequenceProject
-    @AppStorage("sisr.ui.deflicker") private var showDeflicker = false
-
-    var body: some View {
-        Section {
-            DisclosureGroup(isExpanded: $showDeflicker) {
-                Toggle(isOn: $project.adjustments.deflicker.enabled) {
-                    Label("Enabled", systemImage: "sun.max.trianglebadge.exclamationmark")
-                }
-                if project.adjustments.deflicker.enabled {
-                    HStack {
-                        Text("Window")
-                        Spacer()
-                        TextField(
-                            "",
-                            value: Binding(
-                                get: { Double(project.adjustments.deflicker.windowSize) },
-                                set: {
-                                    let odd = Int($0.rounded())
-                                    project.adjustments.deflicker.windowSize = max(3, odd | 1)
-                                }
-                            ),
-                            format: .number.precision(.fractionLength(0))
-                        )
-                        .labelsHidden()
-                        .multilineTextAlignment(.trailing)
-                        .frame(width: 48)
-                        .textFieldStyle(.roundedBorder)
-                        Text("frames")
-                            .foregroundStyle(.secondary)
-                        Stepper(
-                            "",
-                            value: $project.adjustments.deflicker.windowSize,
-                            in: 3...61,
-                            step: 2
-                        )
-                        .labelsHidden()
-                    }
-                    AdjustmentSliderRow(
-                        title: "Strength",
-                        value: $project.adjustments.deflicker.strength,
-                        range: 0...1,
-                        resetValue: 0.75
-                    )
-                }
-            } label: {
-                DisclosureLabel(
-                    title: "Deflicker",
-                    subtitle: showDeflicker ? nil : deflickerSummary
-                )
-            }
-        }
-        .onAppear {
-            if project.adjustments.deflicker.enabled { showDeflicker = true }
-        }
-        .onChange(of: project.adjustments.deflicker.enabled) { _, enabled in
-            if enabled { showDeflicker = true }
-        }
-    }
-
-    private var deflickerSummary: String {
-        project.adjustments.deflicker.enabled
-            ? "On — smooths brightness before encoding"
-            : "Smooths brightness across the in/out range"
     }
 }
 

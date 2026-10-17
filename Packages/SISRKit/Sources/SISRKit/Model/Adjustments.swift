@@ -51,22 +51,6 @@ public struct DetailAdjustments: Codable, Equatable, Sendable {
     public var isIdentity: Bool { self == .identity }
 }
 
-public struct DeflickerSettings: Codable, Equatable, Sendable {
-    public var enabled: Bool
-    /// Rolling average window in frames (odd preferred).
-    public var windowSize: Int
-    /// Strength 0…1 of how much to pull toward the rolling average.
-    public var strength: Double
-
-    public static let off = DeflickerSettings(enabled: false, windowSize: 15, strength: 0.75)
-
-    public init(enabled: Bool = false, windowSize: Int = 15, strength: Double = 0.75) {
-        self.enabled = enabled
-        self.windowSize = max(3, windowSize)
-        self.strength = min(1, max(0, strength))
-    }
-}
-
 public struct Adjustments: Codable, Equatable, Sendable {
     public var color: ColorAdjustments
     public var detail: DetailAdjustments

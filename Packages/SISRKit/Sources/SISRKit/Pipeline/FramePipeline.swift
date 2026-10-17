@@ -15,7 +15,9 @@ public struct FramePipelineInput: Sendable {
     public var showOriginal: Bool
     /// Full-frame preview for the viewer (adjustments on, crop/output scale off).
     public var compositionPreview: Bool
-    public var exposureBias: Double
+    /// Per-frame deflicker result. Regional gains are skipped in composition preview,
+    /// since they are measured on the cropped output.
+    public var deflicker: DeflickerCorrection
 
     public init(
         imageURL: URL,
@@ -27,7 +29,7 @@ public struct FramePipelineInput: Sendable {
         overlayBackgroundOpacity: Double = 0.5,
         showOriginal: Bool = false,
         compositionPreview: Bool = false,
-        exposureBias: Double = 0
+        deflicker: DeflickerCorrection = .identity
     ) {
         self.imageURL = imageURL
         self.crop = crop
@@ -38,7 +40,7 @@ public struct FramePipelineInput: Sendable {
         self.overlayBackgroundOpacity = overlayBackgroundOpacity
         self.showOriginal = showOriginal
         self.compositionPreview = compositionPreview
-        self.exposureBias = exposureBias
+        self.deflicker = deflicker
     }
 }
 
@@ -62,16 +64,17 @@ public final class FramePipeline: @unchecked Sendable {
         }
 
         image = applyOrientation(image, crop: input.crop)
-        image = applyColor(image, color: input.adjustments.color, exposureBias: input.exposureBias)
+        image = applyColor(image, color: input.adjustments.color)
         image = applyDetail(image, detail: input.adjustments.detail)
 
         // Viewer composition: full frame with a crop overlay drawn in UI, not baked in.
         if input.compositionPreview {
-            return cropFull(image)
+            return cropFull(applyDeflicker(image, correction: input.deflicker, includeLocal: false))
         }
 
         image = applyStraightenAndCrop(image, crop: input.crop)
         image = scaleToOutput(image, size: input.outputSize)
+        image = applyDeflicker(image, correction: input.deflicker, includeLocal: true)
 
         if input.overlay != .none {
             // Bake via Core Graphics so plate alpha matches SwiftUI preview
@@ -183,6 +186,22 @@ public final class FramePipeline: @unchecked Sendable {
         return context.createCGImage(image, from: rect)
     }
 
+    /// Graded, cropped, scaled output for an already-decoded (usually downsampled) source,
+    /// without deflicker or overlay — what deflicker analysis measures.
+    public func gradedOutput(
+        from source: CIImage,
+        crop: CropState,
+        adjustments: Adjustments,
+        outputSize: PixelSize
+    ) -> CIImage {
+        var image = cropFull(source)
+        image = applyOrientation(image, crop: crop)
+        image = applyColor(image, color: adjustments.color)
+        image = applyDetail(image, detail: adjustments.detail)
+        image = applyStraightenAndCrop(image, crop: crop)
+        return scaleToOutput(image, size: outputSize)
+    }
+
     /// Lazy file-backed CIImage — decoded when rendered into the writer pixel buffer,
     /// avoiding an eager full-size CGImage/IOSurface per frame (CMPhoto e00002c2 storms).
     private func loadCIImage(url: URL) -> CIImage? {
@@ -224,13 +243,12 @@ public final class FramePipeline: @unchecked Sendable {
         return img
     }
 
-    private func applyColor(_ image: CIImage, color: ColorAdjustments, exposureBias: Double) -> CIImage {
+    private func applyColor(_ image: CIImage, color: ColorAdjustments) -> CIImage {
         var img = image
-        let exposure = color.exposure + exposureBias
-        if exposure != 0 {
+        if color.exposure != 0 {
             let f = CIFilter.exposureAdjust()
             f.inputImage = img
-            f.ev = Float(exposure)
+            f.ev = Float(color.exposure)
             img = f.outputImage ?? img
         }
         if color.contrast != 0 || color.saturation != 0 {

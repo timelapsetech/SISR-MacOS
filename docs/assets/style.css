@@ -574,6 +574,52 @@ pre code {
   color: var(--muted);
 }
 
+.feature {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  gap: 1.5rem 2rem;
+  align-items: start;
+  padding: 2.25rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.feature h2 {
+  margin: 0.2rem 0 0.6rem;
+}
+
+.feature__shot {
+  margin: 0;
+}
+
+.feature__shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #111827;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+}
+
+.feature__copy p {
+  color: var(--muted);
+}
+
+.feature__copy h3 {
+  margin: 1.1rem 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 720px) {
+  .feature {
+    grid-template-columns: 1fr;
+  }
+
+  .feature__shot {
+    max-width: 360px;
+  }
+}
+
 .steps {
   margin: 0.5rem 0 0.5rem 1.25rem;
   padding: 0;

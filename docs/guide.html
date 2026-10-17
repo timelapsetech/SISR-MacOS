@@ -28,6 +28,7 @@
         </a>
         <nav class="nav" aria-label="Primary">
           <a href="index.html">Home</a>
+          <a href="features.html">Features</a>
           <a href="guide.html" aria-current="page">Guide</a>
           <a href="crops.html">Crops</a>
           <a href="privacy.html">Privacy</a>
@@ -53,7 +54,8 @@
         <h1>User guide</h1>
         <p class="lead">
           How to use SISR on Mac — open a sequence, preview on the timeline, crop and
-          color, then export with AVFoundation.
+          color, then export with AVFoundation. For a close-up of each control, see the
+          <a href="features.html">feature tour</a>.
         </p>
         <div class="btn-row">
           <a
@@ -275,9 +277,70 @@
       <section id="deflicker">
         <h2>Deflicker</h2>
         <p>
-          Expand <strong>Deflicker</strong> and enable it to smooth brightness
-          across the in/out range before encoding. Analysis runs with a progress indicator
-          so long sequences do not look stuck at 0%.
+          Expand <strong>Deflicker</strong> and enable it to balance brightness, contrast,
+          and color across the in/out range. SISR measures each frame after your crop and
+          grade, so it balances what you actually see in the output.
+        </p>
+        <ol class="steps">
+          <li>Turn on <strong>Enabled</strong> and pick a <strong>Mode</strong>.</li>
+          <li>
+            Click <strong>Analyze sequence</strong>. A chart shows measured brightness
+            (orange), the target (dashed), and the corrected result (green). Drag on the
+            chart to scrub.
+          </li>
+          <li>
+            The viewer previews the correction for the current frame. Rendering reuses the
+            analysis, or runs it automatically if you skip this step.
+          </li>
+        </ol>
+        <h3>Modes</h3>
+        <ul>
+          <li>
+            <strong>Standard</strong> — removes frame-to-frame exposure jitter (aperture
+            flicker, auto-exposure hunting) while keeping slow changes.
+          </li>
+          <li>
+            <strong>Sun &amp; clouds</strong> — for frames that swing between direct sun and
+            overcast. Uses a wide outlier-resistant window, matches contrast and color, and
+            evens out regional brightness (for example a sunlit foreground under a shaded sky).
+          </li>
+          <li>
+            <strong>Day-to-night (Holy Grail)</strong> — for sunsets and sunrises shot with
+            exposure ramping. Reads shutter, aperture, and ISO from EXIF to remove the steps
+            the camera made, and keeps the natural fade to dark.
+          </li>
+          <li>
+            <strong>Locked look</strong> — holds every frame at one brightness (the range
+            median, or a reference frame you choose with <strong>Use current frame</strong>).
+          </li>
+          <li>
+            <strong>Gentle</strong> — a light touch for sequences that are almost clean.
+          </li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+          <li>
+            <strong>Smoothing</strong> — Robust ignores single-frame outliers such as a cloud
+            gap; Gaussian is smoothest; Average matches earlier versions.
+          </li>
+          <li>
+            <strong>Metering</strong> — Full frame, Ignore sky (bottom two-thirds), or Center.
+            Ignore sky helps when a bright sky would otherwise drive the correction.
+          </li>
+          <li>
+            <strong>Regional</strong> — corrects brightness on a coarse or fine grid, not just
+            the whole frame.
+          </li>
+          <li>
+            <strong>Match contrast</strong>, <strong>Balance color</strong>, and
+            <strong>Use camera exposure (EXIF)</strong> toggle each part of the model;
+            <strong>Max correction</strong> limits how far any frame is pushed.
+          </li>
+        </ul>
+        <p class="callout">
+          Deflicker evens out light; it cannot remove hard shadows that move between sunny
+          and overcast frames. A wider window gives a steadier result but follows real
+          lighting changes more slowly.
         </p>
       </section>
 

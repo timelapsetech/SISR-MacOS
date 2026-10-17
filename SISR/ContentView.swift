@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showInspector = true
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var playback = PlaybackController()
+    @State private var deflicker = DeflickerController()
     @State private var autosaveTask: Task<Void, Never>?
     @State private var showRenderError = false
 
@@ -29,6 +30,7 @@ struct ContentView: View {
                 project: project,
                 renderController: renderController,
                 frameCache: frameCache,
+                deflicker: deflicker,
                 openSequence: openSequence,
                 openDirectory: loadDirectory,
                 closeSequence: closeSequence,
@@ -38,9 +40,19 @@ struct ContentView: View {
                 project: project,
                 playback: playback
             ))
-            .onChange(of: project.crop) { _, _ in scheduleAutosave() }
-            .onChange(of: project.adjustments) { _, _ in scheduleAutosave() }
-            .onChange(of: project.render) { _, _ in scheduleAutosave() }
+            .onChange(of: project.crop) { _, _ in
+                scheduleAutosave()
+                deflicker.refresh(project: project)
+            }
+            .onChange(of: project.adjustments) { _, _ in
+                scheduleAutosave()
+                deflicker.refresh(project: project)
+            }
+            .onChange(of: project.render) { _, _ in
+                scheduleAutosave()
+                deflicker.refresh(project: project)
+            }
+            .onChange(of: project.timeline) { _, _ in deflicker.refresh(project: project) }
             // Skip playhead autosave while playing — it was hitching every frame.
             .onChange(of: project.playheadIndex) { _, _ in
                 guard !playback.isPlaying else { return }
@@ -77,7 +89,8 @@ struct ContentView: View {
             ViewerView(
                 project: project,
                 frameCache: frameCache,
-                playback: playback
+                playback: playback,
+                deflicker: deflicker
             )
             TimelineView(
                 project: project,
@@ -88,7 +101,7 @@ struct ContentView: View {
         }
         .background(Theme.viewerCanvas)
         .inspector(isPresented: $showInspector) {
-            InspectorView(project: project)
+            InspectorView(project: project, deflicker: deflicker)
                 .inspectorColumnWidth(min: 280, ideal: 320, max: 400)
         }
     }
@@ -136,7 +149,11 @@ struct ContentView: View {
             }
 
             Button {
-                renderController.start(project: project, frameCache: frameCache)
+                renderController.start(
+                    project: project,
+                    frameCache: frameCache,
+                    deflickerAnalysis: deflicker.analysis
+                )
             } label: {
                 Label("Render", systemImage: "film")
             }
@@ -181,6 +198,7 @@ struct ContentView: View {
         guard !renderController.isRendering else { return }
         playback.stop()
         project.close()
+        deflicker.reset()
         frameCache.clear()
         renderController.progress = nil
         renderController.completedURL = nil
@@ -209,6 +227,7 @@ struct ContentView: View {
         let bookmark = BookmarkStore.bookmark(for: url)
         _ = url.startAccessingSecurityScopedResource()
         do {
+            deflicker.reset()
             try project.load(directory: url, bookmark: bookmark)
             if let saved = ProjectPersistence.load(forSourcePath: url.path) {
                 project.restore(saved)
@@ -242,6 +261,7 @@ private struct ProjectSessionNotificationsModifier: ViewModifier {
     var project: SequenceProject
     var renderController: RenderController
     var frameCache: FrameCache
+    var deflicker: DeflickerController
     var openSequence: () -> Void
     var openDirectory: (URL) -> Void
     var closeSequence: () -> Void
@@ -261,7 +281,11 @@ private struct ProjectSessionNotificationsModifier: ViewModifier {
                 closeSequence()
             }
             .onReceive(NotificationCenter.default.publisher(for: .sisrRender)) { _ in
-                renderController.start(project: project, frameCache: frameCache)
+                renderController.start(
+                    project: project,
+                    frameCache: frameCache,
+                    deflickerAnalysis: deflicker.analysis
+                )
             }
             .onReceive(NotificationCenter.default.publisher(for: .sisrSetIn)) { _ in
                 project.setInPoint()

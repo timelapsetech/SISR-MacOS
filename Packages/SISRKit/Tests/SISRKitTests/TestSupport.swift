@@ -247,7 +247,7 @@ enum TestSupport {
         overlayBackgroundOpacity: Double = 0.5,
         showOriginal: Bool = false,
         compositionPreview: Bool = false,
-        exposureBias: Double = 0
+        deflicker: DeflickerCorrection = .identity
     ) -> FramePipelineInput {
         FramePipelineInput(
             imageURL: imageURL,
@@ -259,7 +259,7 @@ enum TestSupport {
             overlayBackgroundOpacity: overlayBackgroundOpacity,
             showOriginal: showOriginal,
             compositionPreview: compositionPreview,
-            exposureBias: exposureBias
+            deflicker: deflicker
         )
     }
 

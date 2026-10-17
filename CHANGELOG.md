@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-17
+
+### Added
+- **New deflicker engine** for time-lapse with changing light: measures brightness percentiles in linear light, smooths with outlier-resistant temporal filtering, and can also match contrast (tone curve), balance color, correct regions on a grid, and remove exposure-ramping steps from EXIF (Holy Grail).
+- **Deflicker modes**: Standard, Sun & clouds, Day-to-night (Holy Grail), Locked look, and Gentle, plus Advanced controls for smoothing, metering, regional grid, and max correction.
+- **Deflicker chart** in the inspector showing measured, target, and corrected brightness, with live per-frame preview in the viewer.
+- **Feature tour** on the docs site, with close-ups of crop, transform, color, detail, overlay, and encode.
+
+### Fixed
+- **Deflicker strength** — corrections were computed on gamma-encoded values and applied in linear light, making them roughly 2.2× too weak. Analysis now also measures the cropped, graded output instead of the raw frame.
+
 ## [1.0.5] - 2026-10-10
 
 ### Fixed
