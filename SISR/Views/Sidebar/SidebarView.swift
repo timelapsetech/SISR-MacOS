@@ -183,6 +183,12 @@ struct EncodeSection: View {
                     .multilineTextAlignment(.trailing)
             }
 
+            Picker("Speed", selection: $project.render.speed) {
+                ForEach(RenderSpeed.allCases) { speed in
+                    Text(speed.displayName).tag(speed)
+                }
+            }
+
             LabeledContent("Duration") {
                 Text(durationLabel)
                     .font(.system(.body, design: .monospaced))
@@ -347,8 +353,11 @@ struct EncodeSection: View {
     }
 
     private var durationLabel: String {
-        let frames = project.selectedFrameCount
+        let frames = project.outputFrameCount
         let secs = project.durationSeconds
+        if project.render.speed != .x1 {
+            return "\(frames) fr · \(String(format: "%.1f", secs)) s · \(project.render.speed.displayName)"
+        }
         return "\(frames) fr · \(String(format: "%.1f", secs)) s"
     }
 }
@@ -451,7 +460,7 @@ struct OverlaySection: View {
 
             if project.render.overlay == .frame {
                 Picker("Numbering", selection: $project.render.frameNumberMode) {
-                    Text("From in point").tag(FrameNumberMode.countFromInPoint)
+                    Text("Sequence").tag(FrameNumberMode.countFromStart)
                     Text("Source numbers").tag(FrameNumberMode.useSourceNumbers)
                 }
             }

@@ -41,7 +41,7 @@ final class RenderController {
         isRendering = true
         errorMessage = nil
         completedURL = nil
-        progress = RenderProgress(framesTotal: project.selectedFrameCount, statusMessage: "Preparing…")
+        progress = RenderProgress(framesTotal: project.outputFrameCount, statusMessage: "Preparing…")
         lastProgressPublish = .distantPast
         pendingProgress = nil
         publishTask?.cancel()

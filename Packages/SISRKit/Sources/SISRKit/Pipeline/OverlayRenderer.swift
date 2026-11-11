@@ -183,8 +183,9 @@ public enum OverlayRenderer {
         )
     }
 
+    /// - Parameter sequenceIndex: 0-based index into the loaded sequence (not the in/out subrange).
     public static func frameOverlayText(
-        indexInRender: Int,
+        sequenceIndex: Int,
         sourceFrameNumber: Int,
         mode: FrameNumberMode,
         pad: Int,
@@ -192,8 +193,8 @@ public enum OverlayRenderer {
     ) -> String {
         let value: Int
         switch mode {
-        case .countFromInPoint:
-            value = indexInRender + 1
+        case .countFromStart:
+            value = sequenceIndex + 1
         case .useSourceNumbers:
             value = sourceFrameNumber
         }

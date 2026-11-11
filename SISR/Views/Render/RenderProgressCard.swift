@@ -44,7 +44,10 @@ struct RenderFooter: View {
     private var summaryLine: String {
         let size = project.outputPixelSize.label
         let codec = project.render.codec.displayName
-        let frames = project.selectedFrameCount
+        let frames = project.outputFrameCount
+        if project.render.speed != .x1 {
+            return "\(size) · \(codec) · \(frames) frames · \(project.render.speed.displayName)"
+        }
         return "\(size) · \(codec) · \(frames) frames"
     }
 }

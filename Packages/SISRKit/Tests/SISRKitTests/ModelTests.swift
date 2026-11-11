@@ -10,6 +10,36 @@ struct ModelTests {
         #expect(GeometryUtil.even(1080) == 1080)
     }
 
+    @Test func renderSpeedSamplesSourceIndices() {
+        let range = TimelineRange(inIndex: 10, outIndex: 19)
+        let settings = RenderSettings(speed: .x2)
+        #expect(settings.sampledSourceIndices(in: range) == [10, 12, 14, 16, 18])
+        #expect(settings.outputFrameCount(in: range) == 5)
+
+        let oneX = RenderSettings(speed: .x1)
+        #expect(oneX.outputFrameCount(in: range) == 10)
+
+        let tenX = RenderSettings(speed: .x10)
+        #expect(tenX.sampledSourceIndices(in: range) == [10])
+    }
+
+    @Test func renderSpeedDefaultsWhenMissingFromJSON() throws {
+        let legacy = """
+        {
+          "preset": "p1080",
+          "customSize": {"width": 1920, "height": 1080},
+          "landscape": true,
+          "codec": "h264",
+          "fps": 30,
+          "overlay": "none",
+          "outputBaseName": "render",
+          "videoEncode": {}
+        }
+        """
+        let settings = try JSONDecoder().decode(RenderSettings.self, from: Data(legacy.utf8))
+        #expect(settings.speed == .x1)
+    }
+
     @Test func outputNaming() {
         var settings = RenderSettings(preset: .p1080, codec: .prores, overlay: .date, outputBaseName: "clip")
         let name = OutputNaming.makeFilename(

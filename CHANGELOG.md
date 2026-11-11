@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-10
+
+### Added
+- **Output speed** (1×–10×) in Encode — keeps the chosen frame rate and shortens the movie by sampling source frames (e.g. 2× at 30 fps encodes every other frame). Timeline play / Play In→Out use the same stride so preview matches the render. Duration and render progress count output frames.
+
+## [1.1.1] - 2026-11-10
+
+### Changed
+- **Frame overlay numbering** — default **Sequence** mode now uses the absolute frame count from the start of the loaded sequence (matching the timeline), instead of restarting at 1 at the in point. **Source numbers** (filename digits) is unchanged. Saved projects that used the old “from in point” setting migrate automatically.
+
+### Fixed
+- Frame burn-in in the viewer and encode no longer resets to the in point when marking a range.
+
 ## [1.1.0] - 2026-10-17
 
 ### Added

@@ -17,10 +17,49 @@ public enum OverlayType: String, Codable, CaseIterable, Sendable, Identifiable {
 }
 
 public enum FrameNumberMode: String, Codable, Sendable {
-    /// 1-based index within the in/out range.
-    case countFromInPoint
+    /// 1-based absolute index from the start of the loaded sequence.
+    case countFromStart
     /// Use the source filename frame number.
     case useSourceNumbers
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(String.self)
+        switch raw {
+        case Self.countFromStart.rawValue, "countFromInPoint":
+            self = .countFromStart
+        case Self.useSourceNumbers.rawValue:
+            self = .useSourceNumbers
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown FrameNumberMode: \(raw)"
+            )
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+}
+
+/// Output playback/render speed via source-frame sampling. Output FPS is unchanged;
+/// higher speeds skip frames so the result is shorter (e.g. 2× keeps every other frame).
+public enum RenderSpeed: Int, Codable, CaseIterable, Sendable, Identifiable {
+    case x1 = 1
+    case x2 = 2
+    case x3 = 3
+    case x4 = 4
+    case x5 = 5
+    case x10 = 10
+
+    public var id: Int { rawValue }
+
+    public var displayName: String { "\(rawValue)×" }
+
+    /// Source-frame stride used when sampling the in/out range.
+    public var stride: Int { max(1, rawValue) }
 }
 
 public enum OutputCodec: String, Codable, CaseIterable, Sendable, Identifiable {
@@ -70,6 +109,8 @@ public struct RenderSettings: Codable, Equatable, Sendable {
     public var landscape: Bool
     public var codec: OutputCodec
     public var fps: Double
+    /// Source-frame sampling multiplier for faster output at the same FPS.
+    public var speed: RenderSpeed
     public var overlay: OverlayType
     public var dateParts: DateParts
     public var frameNumberMode: FrameNumberMode
@@ -91,9 +132,10 @@ public struct RenderSettings: Codable, Equatable, Sendable {
         landscape: Bool = true,
         codec: OutputCodec = .h264,
         fps: Double = 30,
+        speed: RenderSpeed = .x1,
         overlay: OverlayType = .none,
         dateParts: DateParts = .allOn,
-        frameNumberMode: FrameNumberMode = .countFromInPoint,
+        frameNumberMode: FrameNumberMode = .countFromStart,
         overlayBackgroundOpacity: Double = 0.5,
         outputDirectoryBookmark: Data? = nil,
         outputDirectoryPath: String? = nil,
@@ -107,6 +149,7 @@ public struct RenderSettings: Codable, Equatable, Sendable {
         self.landscape = landscape
         self.codec = codec
         self.fps = fps
+        self.speed = speed
         self.overlay = overlay
         self.dateParts = dateParts
         self.frameNumberMode = frameNumberMode
@@ -118,7 +161,7 @@ public struct RenderSettings: Codable, Equatable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case preset, customSize, maxWidth, maxHeight, landscape, codec, fps
+        case preset, customSize, maxWidth, maxHeight, landscape, codec, fps, speed
         case overlay, dateParts, frameNumberMode, overlayBackgroundOpacity
         case outputDirectoryBookmark, outputDirectoryPath, outputBaseName
         case videoEncode
@@ -133,9 +176,10 @@ public struct RenderSettings: Codable, Equatable, Sendable {
         landscape = try c.decodeIfPresent(Bool.self, forKey: .landscape) ?? true
         codec = try c.decode(OutputCodec.self, forKey: .codec)
         fps = try c.decode(Double.self, forKey: .fps)
+        speed = try c.decodeIfPresent(RenderSpeed.self, forKey: .speed) ?? .x1
         overlay = try c.decode(OverlayType.self, forKey: .overlay)
         dateParts = try c.decodeIfPresent(DateParts.self, forKey: .dateParts) ?? .allOn
-        frameNumberMode = try c.decodeIfPresent(FrameNumberMode.self, forKey: .frameNumberMode) ?? .countFromInPoint
+        frameNumberMode = try c.decodeIfPresent(FrameNumberMode.self, forKey: .frameNumberMode) ?? .countFromStart
         overlayBackgroundOpacity = Self.clampOpacity(
             try c.decodeIfPresent(Double.self, forKey: .overlayBackgroundOpacity) ?? 0.5
         )
@@ -152,6 +196,17 @@ public struct RenderSettings: Codable, Equatable, Sendable {
 
     public var suggestedFPS: Double {
         codec == .gif ? 4 : fps
+    }
+
+    /// Absolute source indices to encode from `range`, stepping by `speed`.
+    public func sampledSourceIndices(in range: TimelineRange) -> [Int] {
+        let step = speed.stride
+        guard range.outIndex >= range.inIndex else { return [] }
+        return Array(stride(from: range.inIndex, through: range.outIndex, by: step))
+    }
+
+    public func outputFrameCount(in range: TimelineRange) -> Int {
+        sampledSourceIndices(in: range).count
     }
 
     public func outputPixelSize(cropSize: PixelSize) -> PixelSize {

@@ -97,6 +97,47 @@ struct RenderSmokeTests {
         #expect(size > 500)
     }
 
+    @Test func h264SpeedSamplesEveryOtherFrame() async throws {
+        let root = try TestSupport.makeTempDir(prefix: "sisr-smoke-speed")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let sequenceDir = root.appendingPathComponent("seq", isDirectory: true)
+        let outputDir = root.appendingPathComponent("out", isDirectory: true)
+        try FileManager.default.createDirectory(at: sequenceDir, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: outputDir, withIntermediateDirectories: true)
+
+        let spec = try TestSupport.writeSolidSequence(
+            directory: sequenceDir,
+            frameCount: 10,
+            width: frameWidth,
+            height: frameHeight,
+            red: 0.4,
+            green: 0.45,
+            blue: 0.5
+        )
+        let outputSize = PixelSize(width: frameWidth, height: frameHeight)
+        let snapshot = TestSupport.renderSnapshot(
+            sequence: spec,
+            sourceSize: CGSize(width: frameWidth, height: frameHeight),
+            outputSize: outputSize,
+            codec: .h264,
+            outputDirectory: outputDir,
+            timeline: TimelineRange(inIndex: 0, outIndex: 9),
+            speed: .x2,
+            outputBaseName: "smoke_speed"
+        )
+
+        let probe = TestSupport.ProgressProbe()
+        let url = try await Renderer().render(project: snapshot, progress: probe.handler)
+
+        #expect(FileManager.default.fileExists(atPath: url.path))
+        // 10 source frames at 2× → indices 0,2,4,6,8 → 5 output frames
+        #expect(probe.maxTotal == 5)
+        #expect(probe.finishedTotal == 5)
+        let attrs = try FileManager.default.attributesOfItem(atPath: url.path)
+        let size = (attrs[.size] as? NSNumber)?.int64Value ?? 0
+        #expect(size > 500)
+    }
+
     @Test func deflickerEnabledRenderCompletes() async throws {
         let root = try TestSupport.makeTempDir(prefix: "sisr-smoke-deflicker")
         defer { try? FileManager.default.removeItem(at: root) }

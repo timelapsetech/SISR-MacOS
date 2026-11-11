@@ -4,7 +4,7 @@
 
 **Simple Image Sequence Renderer** — a **new, native Mac app** for turning numbered photo sequences into MP4, MOV, or GIF.
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 This repository is the SwiftUI / AVFoundation rewrite for macOS. It is not a wrapper around the older tool: open a folder of stills, preview on a filmstrip, crop and grade interactively, then encode with Core Image + AVFoundation (**no FFmpeg, no Python runtime**).
 
@@ -63,6 +63,7 @@ make test
 - Center viewer + filmstrip timeline with in/out points, J/K/L, I/O
 - Inspector: crop with aspect lock & resolution checks, transform, color, detail, deflicker (modes for sun/cloud, day-to-night, and locked exposure)
 - Codecs: H.264, HEVC, ProRes, ProRes HQ, GIF
+- Output speed (1×–10×) via frame sampling at the chosen fps; preview play matches
 - Live render progress (sidebar card, toolbar, Dock badge, notification)
 - Per-sequence state autosave; security-scoped bookmarks; Open Recent
 
@@ -75,7 +76,7 @@ make test
 
 ## Release
 
-See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.1.0`) to build, notarize, and attach a universal zip.
+See [scripts/release/README.md](scripts/release/README.md). Tag with `app-v*` (e.g. `app-v1.2.0`) to build, notarize, and attach a universal zip.
 
 ## License
 

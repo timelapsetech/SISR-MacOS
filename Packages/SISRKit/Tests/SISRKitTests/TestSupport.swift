@@ -274,12 +274,14 @@ enum TestSupport {
         overlay: OverlayType = .none,
         timeline: TimelineRange? = nil,
         frameDates: [String] = [],
+        speed: RenderSpeed = .x1,
         outputBaseName: String = "smoke"
     ) -> SequenceProjectSnapshot {
         var render = RenderSettings(
             preset: .custom,
             customSize: outputSize,
             codec: codec,
+            speed: speed,
             overlay: overlay,
             outputDirectoryPath: outputDirectory.path,
             outputBaseName: outputBaseName

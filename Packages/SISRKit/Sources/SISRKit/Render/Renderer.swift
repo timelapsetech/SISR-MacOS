@@ -20,11 +20,12 @@ public actor Renderer {
 
         guard let sequence = project.sequence else { throw RenderError.noSequence }
         let range = project.timeline.clamped(to: sequence.frameCount)
-        let frames = Array(sequence.frames[range.inIndex...range.outIndex])
-        guard !frames.isEmpty else { throw RenderError.noSequence }
+        let settings = project.render
+        let sourceIndices = settings.sampledSourceIndices(in: range)
+        guard !sourceIndices.isEmpty else { throw RenderError.noSequence }
+        let rangeFrames = Array(sequence.frames[range.inIndex...range.outIndex])
 
         let outputSize = project.outputSize
-        let settings = project.render
         guard var outputURL = OutputNaming.outputURL(
             settings: settings,
             cropLabel: settings.preset == .original ? nil : settings.preset.rawValue,
@@ -40,7 +41,8 @@ public actor Renderer {
 
         let pipeline = FramePipeline()
         let start = Date()
-        let total = frames.count
+        let rangeFrameCount = rangeFrames.count
+        let total = sourceIndices.count
 
         func emit(
             done: Int,
@@ -78,9 +80,12 @@ public actor Renderer {
 
         emit(done: 0, status: "Preparing…")
 
-        // Deflicker (optional) — reuse the inspector's analysis when it still matches,
-        // otherwise measure here and advance the same progress bar.
-        var deflickerCorrections = Array(repeating: DeflickerCorrection.identity, count: total)
+        // Deflicker (optional) — analyze the full in/out range, then apply corrections
+        // only to sampled output frames. Reuse the inspector's analysis when it matches.
+        var deflickerCorrections = Array(
+            repeating: DeflickerCorrection.identity,
+            count: rangeFrameCount
+        )
         let deflicker = project.adjustments.deflicker
         if deflicker.enabled {
             let key = DeflickerAnalysisKey(project: project)
@@ -91,7 +96,7 @@ public actor Renderer {
             if stats == nil {
                 stats = try await analyzeDeflicker(
                     project: project,
-                    urls: frames.map(\.url),
+                    urls: rangeFrames.map(\.url),
                     start: start,
                     progress: progress,
                     emitCancelled: { emit(done: 0, cancelled: true) }
@@ -107,7 +112,7 @@ public actor Renderer {
                 settings: deflicker,
                 referenceIndex: deflicker.referenceFrame.map { $0 - range.inIndex }
             )
-            if solution.corrections.count == total {
+            if solution.corrections.count == rangeFrameCount {
                 deflickerCorrections = solution.corrections
             }
         }
@@ -120,16 +125,18 @@ public actor Renderer {
             )
             outputURL = stream.resolvedURL
             do {
-                for (i, frame) in frames.enumerated() {
+                for (i, sourceIndex) in sourceIndices.enumerated() {
                     if cancelFlag {
                         stream.cancel()
                         emit(done: i, cancelled: true)
                         throw RenderError.cancelled
                     }
+                    let frame = sequence.frames[sourceIndex]
+                    let sourceOffset = sourceIndex - range.inIndex
                     try autoreleasepool {
                         let overlayText = makeOverlayText(
                             project: project,
-                            renderIndex: i,
+                            sequenceIndex: sourceIndex,
                             sourceFrame: frame,
                             total: total
                         )
@@ -142,7 +149,7 @@ public actor Renderer {
                             overlayText: overlayText,
                             overlayBackgroundOpacity: settings.overlayBackgroundOpacity,
                             showOriginal: false,
-                            deflicker: deflickerCorrections[i]
+                            deflicker: deflickerCorrections[sourceOffset]
                         )
                         guard let cg = pipeline.renderCGImage(from: input) else {
                             throw RenderError.frameFailed(i)
@@ -183,16 +190,18 @@ public actor Renderer {
         outputURL = writer.outputURL
 
         do {
-            for (i, frame) in frames.enumerated() {
+            for (i, sourceIndex) in sourceIndices.enumerated() {
                 if cancelFlag {
                     writer.cancel()
                     emit(done: i, cancelled: true)
                     throw RenderError.cancelled
                 }
+                let frame = sequence.frames[sourceIndex]
+                let sourceOffset = sourceIndex - range.inIndex
                 try autoreleasepool {
                     let overlayText = makeOverlayText(
                         project: project,
-                        renderIndex: i,
+                        sequenceIndex: sourceIndex,
                         sourceFrame: frame,
                         total: total
                     )
@@ -205,7 +214,7 @@ public actor Renderer {
                         overlayText: overlayText,
                         overlayBackgroundOpacity: settings.overlayBackgroundOpacity,
                         showOriginal: false,
-                        deflicker: deflickerCorrections[i]
+                        deflicker: deflickerCorrections[sourceOffset]
                     )
                     guard let ci = pipeline.makeImage(from: input) else {
                         writer.cancel()
@@ -288,7 +297,7 @@ public actor Renderer {
 
     private func makeOverlayText(
         project: SequenceProjectSnapshot,
-        renderIndex: Int,
+        sequenceIndex: Int,
         sourceFrame: ImageSequenceFrame,
         total: Int
     ) -> String {
@@ -296,17 +305,18 @@ public actor Renderer {
         case .none:
             return ""
         case .date:
-            let raw = project.frameDates.indices.contains(project.timeline.inIndex + renderIndex)
-                ? project.frameDates[project.timeline.inIndex + renderIndex]
+            let raw = project.frameDates.indices.contains(sequenceIndex)
+                ? project.frameDates[sequenceIndex]
                 : MetadataReader.extractDateTime(from: sourceFrame.url)
             return DateOverlayFormatter.format(raw, parts: project.render.dateParts)
         case .frame:
+            let sequenceTotal = max(1, project.sequence?.frameCount ?? total)
             return OverlayRenderer.frameOverlayText(
-                indexInRender: renderIndex,
+                sequenceIndex: sequenceIndex,
                 sourceFrameNumber: sourceFrame.frameNumber,
                 mode: project.render.frameNumberMode,
                 pad: project.sequence?.numberWidth ?? 4,
-                totalFrames: total
+                totalFrames: sequenceTotal
             )
         }
     }

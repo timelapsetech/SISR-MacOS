@@ -349,9 +349,9 @@
               Dates come from camera metadata when the file has it.
             </li>
             <li>
-              For a frame number, choose <strong>From in point</strong> (1, 2, 3… inside
-              the range you render) or <strong>Source numbers</strong> (the number in the
-              filename).
+              For a frame number, choose <strong>Sequence</strong> (absolute count from the
+              start of the loaded sequence, ignoring in/out) or <strong>Source numbers</strong>
+              (the number in the filename).
             </li>
             <li>
               <strong>Background</strong> sets the badge fill from 0% to 100%. 50% is the
@@ -389,8 +389,13 @@
             </li>
             <li>
               Set <strong>Frame rate</strong> with the stepper or by typing. Duration is
-              the in/out frame count divided by that rate — 844 frames at 24 fps is 35.2
-              seconds.
+              the number of <em>output</em> frames divided by that rate — 844 frames at
+              24 fps is 35.2 seconds.
+            </li>
+            <li>
+              <strong>Speed</strong> (1×–10×) keeps the same frame rate but samples the
+              sequence — 2× encodes every other frame so the movie is half as long.
+              Timeline play uses the same stride so preview matches the render.
             </li>
             <li>
               The <strong>Bitrate &amp; quality</strong> summary is average / peak, sized
@@ -433,7 +438,8 @@
 
     <footer class="site-footer">
       <p>
-        Simple Image Sequence Renderer — open source under the MIT License.
+        © 2026 Time Lapse Technologies. Simple Image Sequence Renderer — open source under
+        the MIT License.
         <a href="https://github.com/timelapsetech/SISR-MacOS">Source</a>
         ·
         <a href="https://apps.apple.com/us/app/sisr/id6818915389?mt=12">Mac App Store</a>

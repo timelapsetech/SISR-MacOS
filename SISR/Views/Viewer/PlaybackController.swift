@@ -126,13 +126,20 @@ final class PlaybackController {
         isPlaying = true
         isPlayingInOut = playingInOut
         let fps = max(0.01, project.render.fps)
+        // Keep output-time cadence (1/fps); advance by speed so preview matches sampled render.
+        let step = project.render.speed.stride
         startTimer(interval: 1.0 / fps) { [weak self] in
             guard let self else { return }
             if project.playheadIndex >= stopAt {
                 self.stop()
                 return
             }
-            project.playheadIndex = min(stopAt, project.playheadIndex + 1)
+            let next = project.playheadIndex + step
+            if next > stopAt {
+                self.stop()
+                return
+            }
+            project.playheadIndex = next
         }
     }
 

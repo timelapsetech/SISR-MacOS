@@ -251,6 +251,12 @@
           <strong>Background</strong> to set the badge fill opacity (default 50%); the
           preview and final encode use the same value.
         </p>
+        <p>
+          For <strong>Frame</strong>, pick numbering:
+          <strong>Sequence</strong> (absolute count from the start of the loaded sequence —
+          the same number as the timeline, ignoring in/out) or
+          <strong>Source numbers</strong> (the digits in the filename).
+        </p>
       </section>
 
       <section id="encode">
@@ -261,6 +267,11 @@
             ProRes / GIF) appear in the menu when available.
           </li>
           <li><strong>Frame rate</strong> — type or step the fps; duration updates.</li>
+          <li>
+            <strong>Speed</strong> — 1× (default) through 10×. Higher speeds keep the same
+            output fps but skip source frames (2× = every other frame), so duration shortens.
+            Play / Play In→Out preview at the same stride.
+          </li>
           <li>
             <strong>Bitrate &amp; quality</strong> — collapsed by default. The summary shows
             auto targets (for example Mbps for 1080p / 4K). Expand to override average or
@@ -393,6 +404,7 @@
 
     <footer class="site-footer">
       <p>
+        © 2026 Time Lapse Technologies.
         <a href="index.html">Home</a>
         ·
         <a href="privacy.html">Privacy</a>

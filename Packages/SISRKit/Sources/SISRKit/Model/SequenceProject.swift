@@ -106,9 +106,14 @@ public final class SequenceProject {
         timeline.clamped(to: frameCount).frameCount
     }
 
+    /// Frames that will actually be written after speed sampling.
+    public var outputFrameCount: Int {
+        render.outputFrameCount(in: timeline.clamped(to: frameCount))
+    }
+
     public var durationSeconds: Double {
         let fps = render.codec == .gif ? max(0.01, render.suggestedFPS) : max(0.01, render.fps)
-        return Double(selectedFrameCount) / fps
+        return Double(outputFrameCount) / fps
     }
 
     public var resolutionChecks: [ResolutionCheck] {
@@ -259,10 +264,9 @@ public final class SequenceProject {
                 return "FRAME 0001"
             }
             let frame = sequence.frames[index]
-            let indexInRender = max(0, index - timeline.inIndex)
-            let total = max(1, selectedFrameCount)
+            let total = max(1, sequence.frameCount)
             return OverlayRenderer.frameOverlayText(
-                indexInRender: indexInRender,
+                sequenceIndex: index,
                 sourceFrameNumber: frame.frameNumber,
                 mode: render.frameNumberMode,
                 pad: sequence.numberWidth,
